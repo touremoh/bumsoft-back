@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 @Getter
@@ -34,13 +34,13 @@ public class Account implements BumsoftEntity {
     private ReferenceEntityType accountType;
 
     @Column(name = "ACC_CREATED_AT")
-    private LocalDateTime createdAt;
+    private LocalDate createdAt;
 
     @Column(name = "ACC_UPDATED_AT")
-    private LocalDateTime updatedAt;
+    private LocalDate updatedAt;
 
     @Column(name = "ACC_DELETED_AT")
-    private LocalDateTime deletedAt;
+    private LocalDate deletedAt;
 
     @OneToMany(mappedBy = "relatedAccount", fetch = FetchType.LAZY)
     private List<Transaction> transactions;

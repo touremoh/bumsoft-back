@@ -5,7 +5,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 @Getter
@@ -36,13 +36,13 @@ public class CreditCardInfo implements BumsoftEntity {
     private BumsoftUser owner;
 
     @Column(name = "CC_CREATED_AT")
-    private LocalDateTime createdAt;
+    private LocalDate createdAt;
 
     @Column(name = "CC_UPDATED_AT")
-    private LocalDateTime updatedAt;
+    private LocalDate updatedAt;
 
     @Column(name = "CC_DELETED_AT")
-    private LocalDateTime deletedAt;
+    private LocalDate deletedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "CC_SUBS_ID")

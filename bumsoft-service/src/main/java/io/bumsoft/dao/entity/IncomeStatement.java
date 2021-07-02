@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -37,11 +37,11 @@ public class IncomeStatement implements BumsoftEntity {
     private ReferenceEntityType incomeType;
 
     @Column(name = "INC_CREATED_AT")
-    private LocalDateTime createdAt;
+    private LocalDate createdAt;
 
     @Column(name = "INC_UPDATED_AT")
-    private LocalDateTime updatedAt;
+    private LocalDate updatedAt;
 
     @Column(name = "INC_DELETED_AT")
-    private LocalDateTime deletedAt;
+    private LocalDate deletedAt;
 }

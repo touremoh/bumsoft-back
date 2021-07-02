@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -29,11 +29,11 @@ public class PaymentInfo implements BumsoftEntity {
     private CreditCardInfo creditCard;
 
     @Column(name = "PI_CREATED_AT")
-    private LocalDateTime createdAt;
+    private LocalDate createdAt;
 
     @Column(name = "PI_UPDATED_AT")
-    private LocalDateTime updatedAt;
+    private LocalDate updatedAt;
 
     @Column(name = "PI_DELETED_AT")
-    private LocalDateTime deletedAt;
+    private LocalDate deletedAt;
 }

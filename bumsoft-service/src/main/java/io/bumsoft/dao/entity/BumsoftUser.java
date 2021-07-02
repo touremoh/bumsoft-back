@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 @Getter
@@ -36,13 +36,13 @@ public class BumsoftUser implements BumsoftEntity {
 
 
     @Column(name = "BS_USR_CREATED_AT")
-    private LocalDateTime createdAt;
+    private LocalDate createdAt;
 
     @Column(name = "BS_USR_UPDATED_AT")
-    private LocalDateTime updatedAt;
+    private LocalDate updatedAt;
 
     @Column(name = "BS_USR_DELETED_AT")
-    private LocalDateTime deletedAt;
+    private LocalDate deletedAt;
 
     // List of all accounts belonging to the user
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
