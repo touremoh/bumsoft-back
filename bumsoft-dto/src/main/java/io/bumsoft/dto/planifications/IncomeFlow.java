@@ -12,7 +12,7 @@ import java.util.List;
 @Getter
 @Setter
 @Builder
-public class IncomeSource implements BumsoftResponse {
+public class IncomeFlow implements BumsoftResponse {
     private LocalDate from;
     private LocalDate until;
     private List<IncomeStatementDto> incomeStatement;

@@ -1,8 +1,6 @@
 package io.bumsoft.dto.common;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 
@@ -13,6 +11,6 @@ public class IncomeStatementDto {
     private Long id;
     private String name;
     private Double expectedAmount;
-    private String incomeType;
+    private ReferenceEntityTypeDto incomeType;
     private LocalDate lastUpdate;
 }

@@ -1,6 +1,8 @@
 package io.bumsoft.dao.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -8,6 +10,8 @@ import javax.persistence.*;
 @Getter
 @Setter
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "REFERENCE_ENTITY_TYPE")
 public class ReferenceEntityType implements BumsoftEntity {
     @Id

@@ -1,6 +1,8 @@
 package io.bumsoft.dao.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -11,6 +13,8 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "SUBSCRIPTION")
 public class Subscription implements BumsoftEntity {
     @Id

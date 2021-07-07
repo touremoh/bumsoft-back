@@ -1,8 +1,6 @@
 package io.bumsoft.dto.common;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -15,5 +13,6 @@ public class AccountDto {
     private String name;
     private String accountType;
     private LocalDate lastUpdate;
+    private String description;
     private List<TransactionDto> transactions;
 }

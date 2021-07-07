@@ -1,6 +1,8 @@
 package io.bumsoft.dao.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -9,6 +11,8 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "PAYMENT_INFO")
 public class PaymentInfo implements BumsoftEntity {
     @Id

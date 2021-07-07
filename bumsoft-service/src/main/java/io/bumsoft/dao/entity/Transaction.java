@@ -32,7 +32,7 @@ public class Transaction implements BumsoftEntity {
 
     @ManyToOne
     @JoinColumn(name = "TRX_INC_STMT_ID")
-    private IncomeStatement statement;
+    private IncomeStatement incomeStatement;
 
     @ManyToOne
     @JoinColumn(name = "TRX_REF_TYP_ID")
