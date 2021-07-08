@@ -4,12 +4,13 @@ import io.bumsoft.dao.entity.Account;
 import io.bumsoft.dao.entity.IncomeStatement;
 import io.bumsoft.dao.entity.ReferenceEntityType;
 import io.bumsoft.dao.entity.Transaction;
+import io.bumsoft.dto.common.AccountDto;
+import io.bumsoft.dto.common.IncomeStatementDto;
+import io.bumsoft.dto.common.ReferenceEntityTypeDto;
 import io.bumsoft.dto.common.TransactionDto;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDate;
@@ -32,12 +33,12 @@ public class TransactionMapperTest {
 
         // then
         assertThat(dto).isNotNull();
-        assertThat(dto.getTransactionValue()).isEqualTo(152.59);
+        assertThat(dto.getValue()).isEqualTo(152.59);
         assertThat(dto.getDescription()).isEqualTo("Description");
         assertThat(dto.getProcessingDate().getYear()).isEqualTo(LocalDate.now().getYear());
-        assertThat(dto.getAccountId()).isEqualTo(1000L);
-        assertThat(dto.getIncomeStatementName()).isEqualTo("IncomeSource");
-        assertThat(dto.getTransactionType()).isEqualTo("TypeName");
+        assertThat(dto.getRelatedAccount().getId()).isEqualTo(1000L);
+        assertThat(dto.getIncomeStatement().getName()).isEqualTo("IncomeSource");
+        assertThat(dto.getTransactionType().getName()).isEqualTo("TypeName");
     }
 
     @Test
@@ -52,7 +53,7 @@ public class TransactionMapperTest {
         assertThat(entity.getDescription()).isEqualTo("Description");
         assertThat(entity.getProcessingDate().getYear()).isEqualTo(LocalDate.now().getYear());
         assertThat(entity.getRelatedAccount().getId()).isEqualTo(1L);
-        assertThat(entity.getIncomeStatement().getName()).isEqualTo("Salary");
+        assertThat(entity.getIncomeStatement().getName()).isEqualTo("IncomeSource");
         assertThat(entity.getTransactionType().getName()).isEqualTo("Credit");
     }
 
@@ -74,11 +75,11 @@ public class TransactionMapperTest {
         return TransactionDto
                 .builder()
                     .id(id)
-                    .transactionType("Credit")
-                    .transactionValue(10.5)
+                    .transactionType(ReferenceEntityTypeDto.builder().name("Credit").build())
+                    .value(10.5)
                     .processingDate(LocalDate.now())
-                    .accountId(1L)
-                    .incomeStatementName("Salary")
+                    .relatedAccount(AccountDto.builder().id(1L).build())
+                    .incomeStatement(IncomeStatementDto.builder().name("IncomeSource").build())
                     .description("Description")
                 .build();
     }

@@ -8,7 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class ReferenceEntityTypeDto implements BumsoftResponse {
-    private String group;
-    private String name;
+public class ErrorResponse implements BumsoftResponse {
+    private String errorMessage;
+    private String errorReason;
 }

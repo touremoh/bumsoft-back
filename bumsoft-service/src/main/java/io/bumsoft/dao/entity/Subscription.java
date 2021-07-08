@@ -24,10 +24,10 @@ public class Subscription implements BumsoftEntity {
     private Long id;
 
     @Column(name = "SUBS_CREATED_AT")
-    private LocalDateTime createdAt;
+    private LocalDate createdAt;
 
     @Column(name = "SUBS_UPDATED_AT")
-    private LocalDateTime updatedAt;
+    private LocalDate updatedAt;
 
     @Column(name = "SUBS_DELETED_AT")
     private LocalDateTime deletedAt;

@@ -1,5 +1,6 @@
 package io.bumsoft.dto.common;
 
+import io.bumsoft.dto.BumsoftResponse;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -7,25 +8,25 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @Builder
-public class TransactionDto {
+public class TransactionDto implements BumsoftResponse  {
 
     // Unique identifier of the transaction
     private Long id;
 
     // The amount of the transaction
-    private Double transactionValue;
+    private Double value;
 
     // The transaction processing date
     private LocalDate processingDate;
 
     // Tell if the transaction is a Debit or a Credit
-    private String transactionType;
+    private ReferenceEntityTypeDto transactionType;
 
     // Related account
-    private Long accountId;
+    private AccountDto relatedAccount;
 
     // Income source
-    private String incomeStatementName;
+    private IncomeStatementDto incomeStatement;
 
     // Description
     private String description;
