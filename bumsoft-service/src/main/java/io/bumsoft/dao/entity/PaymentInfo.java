@@ -18,7 +18,7 @@ public class PaymentInfo implements BumsoftEntity {
     @Id
     @Column(name = "PI_ID")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "payment_info_sequence")
-    @SequenceGenerator(name = "payment_info_sequence", sequenceName = "PAYMENT_INFO_SEQ")
+    @SequenceGenerator(name = "payment_info_sequence", sequenceName = "PAYMENT_INFO_SEQ", allocationSize = 1)
     private Long id;
 
     @Column(name = "PI_SUBSCRIPTION_PRICE")

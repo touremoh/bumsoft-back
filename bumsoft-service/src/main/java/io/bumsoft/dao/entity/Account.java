@@ -20,7 +20,7 @@ public class Account implements BumsoftEntity {
     @Id
     @Column(name = "ACC_ID")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "account_sequence")
-    @SequenceGenerator(name = "account_sequence", sequenceName = "ACCOUNT_SEQ")
+    @SequenceGenerator(name = "account_sequence", sequenceName = "ACCOUNT_SEQ", allocationSize = 1)
     private Long id;
 
     @Column(name = "ACC_NAME")

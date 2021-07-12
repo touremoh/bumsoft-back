@@ -19,7 +19,7 @@ public class CreditCardInfo implements BumsoftEntity {
     @Id
     @Column(name = "CC_ID")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "credit_card_sequence")
-    @SequenceGenerator(name = "credit_card_sequence", sequenceName = "CREDIT_CARD_SEQ")
+    @SequenceGenerator(name = "credit_card_sequence", sequenceName = "CREDIT_CARD_SEQ", allocationSize = 1)
     private Long id;
 
     @Column(name = "CC_OWNER_FULL_NAME")

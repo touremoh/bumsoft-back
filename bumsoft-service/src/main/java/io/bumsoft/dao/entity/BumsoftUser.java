@@ -20,7 +20,7 @@ public class BumsoftUser implements BumsoftEntity {
     @Id
     @Column(name = "BS_USR_ID")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_sequence")
-    @SequenceGenerator(name = "user_sequence", sequenceName = "USER_SEQ")
+    @SequenceGenerator(name = "user_sequence", sequenceName = "USER_SEQ", allocationSize = 1)
     private Long id;
 
     @Column(name = "BS_USR_FIRST_NAME")

@@ -1,1 +1,0 @@
-RUNSCRIPT FROM 'h2/data/data.sql';

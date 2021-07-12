@@ -18,7 +18,7 @@ public class Operation implements BumsoftEntity {
     @Id
     @Column(name = "OP_ID")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "operation_sequence")
-    @SequenceGenerator(name = "operation_sequence", sequenceName = "OPERATION_SEQ")
+    @SequenceGenerator(name = "operation_sequence", sequenceName = "OPERATION_SEQ", allocationSize = 1)
     private Long id;
 
     @Column(name = "OP_NAME")

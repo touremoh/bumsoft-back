@@ -1,3 +1,25 @@
 server:
   servlet:
     context-path: /api/v1
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/bumsoftdb
+    driver-class-name: org.postgresql.Driver
+    username: ${username}
+    password: ${password}
+    name: bumsoftdb
+  sql:
+    init:
+      platform: postgresql
+      mode: never
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: none
+      use-new-id-generator-mappings: false
+    properties:
+      hibernate:
+        default_schema: bumsoftdb
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    generate-ddl: false

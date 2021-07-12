@@ -7,6 +7,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.List;
 
 @Getter
 @Setter
@@ -19,7 +20,7 @@ public class IncomeStatement implements BumsoftEntity {
     @Id
     @Column(name = "INC_STMT_ID")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "income_statement_sequence")
-    @SequenceGenerator(name = "income_statement_sequence", sequenceName = "INCOME_STATEMENT_SEQ")
+    @SequenceGenerator(name = "income_statement_sequence", sequenceName = "INCOME_STATEMENT_SEQ", allocationSize = 1)
     private Long id;
 
     @Column(name = "INC_STMT_NAME")
@@ -44,4 +45,7 @@ public class IncomeStatement implements BumsoftEntity {
 
     @Column(name = "INC_DELETED_AT")
     private LocalDate deletedAt;
+
+    @OneToMany(mappedBy = "incomeStatement", fetch = FetchType.LAZY)
+    private List<Transaction> transactions;
 }

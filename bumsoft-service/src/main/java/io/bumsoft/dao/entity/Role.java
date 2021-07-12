@@ -18,7 +18,7 @@ public class Role implements BumsoftEntity {
     @Id
     @Column(name = "ROLE_ID")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "role_sequence")
-    @SequenceGenerator(name = "role_sequence", sequenceName = "ROLE_SEQ")
+    @SequenceGenerator(name = "role_sequence", sequenceName = "ROLE_SEQ", allocationSize = 1)
     private Long id;
 
     @Column(name = "ROLE_NAME")

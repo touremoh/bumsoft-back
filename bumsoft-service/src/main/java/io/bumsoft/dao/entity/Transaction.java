@@ -14,7 +14,7 @@ public class Transaction implements BumsoftEntity {
     @Id
     @Column(name = "TRX_ID")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "transaction_sequence")
-    @SequenceGenerator(name = "transaction_sequence", sequenceName = "TRANSACTION_SEQ")
+    @SequenceGenerator(name = "transaction_sequence", sequenceName = "TRANSACTION_SEQ", allocationSize = 1)
     private Long id;
 
     @Column(name = "TRX_VALUE")

@@ -17,7 +17,7 @@ public class ReferenceEntityType implements BumsoftEntity {
     @Id
     @Column(name = "REF_TYP_ID")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "reference_entity_sequence")
-    @SequenceGenerator(name = "reference_entity_sequence", sequenceName = "REFERENCE_ENTITY_SEQ")
+    @SequenceGenerator(name = "reference_entity_sequence", sequenceName = "REFERENCE_ENTITY_SEQ", allocationSize = 1)
     private Long id;
 
     @Column(name = "REF_TYP_GROUP")

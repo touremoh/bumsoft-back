@@ -20,7 +20,7 @@ public class Subscription implements BumsoftEntity {
     @Id
     @Column(name = "SUBS_ID")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "subscription_sequence")
-    @SequenceGenerator(name = "subscription_sequence", sequenceName = "SUBSCRIPTION_SEQ")
+    @SequenceGenerator(name = "subscription_sequence", sequenceName = "SUBSCRIPTION_SEQ", allocationSize = 1)
     private Long id;
 
     @Column(name = "SUBS_CREATED_AT")

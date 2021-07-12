@@ -1,0 +1,1 @@
+RUNSCRIPT FROM 'bumsoft-service/src/main/resources/postgres/dml.sql';
