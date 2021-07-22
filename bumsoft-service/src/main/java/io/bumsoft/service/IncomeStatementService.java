@@ -18,7 +18,7 @@ import static java.util.Optional.ofNullable;
 
 @Slf4j
 @Service
-public class IncomeStatementService {
+public class IncomeStatementService extends AbstractBumsoftService<IncomeStatement, IncomeStatementRepository> {
 
     private static final String INCOME_TYPE_EXPENSE = "EXPENSE";
 

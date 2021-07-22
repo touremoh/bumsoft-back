@@ -14,6 +14,6 @@ public class AccountDto implements BumsoftResponse {
     private String name;
     private LocalDate updatedAt;
     private String description;
-    private ReferenceEntityTypeDto accountType;
+    private String accountType;
     private List<TransactionDto> transactions;
 }

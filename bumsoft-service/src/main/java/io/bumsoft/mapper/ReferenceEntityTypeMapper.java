@@ -5,5 +5,15 @@ import io.bumsoft.dto.common.ReferenceEntityTypeDto;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
-public abstract class ReferenceEntityTypeMapper implements AbstractObjectsMapper<ReferenceEntityType, ReferenceEntityTypeDto> {
+public interface ReferenceEntityTypeMapper extends AbstractObjectsMapper<ReferenceEntityType, ReferenceEntityTypeDto> {
+
+    default String mapReferenceEntityTypeToString(ReferenceEntityType source) {
+        return source.getName();
+    }
+
+    default ReferenceEntityType mapStringToReferenceEntityType(String source) {
+        ReferenceEntityType referenceEntityType = new ReferenceEntityType();
+        referenceEntityType.setName(source);
+        return referenceEntityType;
+    }
 }

@@ -20,13 +20,7 @@ public class TransactionDto implements BumsoftResponse  {
     private LocalDate processingDate;
 
     // Tell if the transaction is a Debit or a Credit
-    private ReferenceEntityTypeDto transactionType;
-
-    // Related account
-    private AccountDto relatedAccount;
-
-    // Income source
-    private IncomeStatementDto incomeStatement;
+    private String transactionType;
 
     // Description
     private String description;

@@ -4,18 +4,20 @@ import io.bumsoft.dao.entity.Account;
 import io.bumsoft.dao.entity.IncomeStatement;
 import io.bumsoft.dao.entity.ReferenceEntityType;
 import io.bumsoft.dao.entity.Transaction;
-import io.bumsoft.dto.common.AccountDto;
 import io.bumsoft.dto.common.IncomeStatementDto;
 import io.bumsoft.dto.common.ReferenceEntityTypeDto;
 import io.bumsoft.dto.common.TransactionDto;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDate;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
 public class TransactionMapperTest {
@@ -23,12 +25,16 @@ public class TransactionMapperTest {
     @InjectMocks
     TransactionMapperImpl mapper;
 
+    @Mock
+    ReferenceEntityTypeMapperImpl typeMapper;
+
     @Test
     public void given_entity_when_mapped_then_dto_returned() {
         // given
         Transaction entity = buildEntity(10000L);
 
         // when
+        when(typeMapper.mapReferenceEntityTypeToString(any())).thenReturn("TypeName");
         TransactionDto dto = mapper.toDto(entity);
 
         // then
@@ -36,9 +42,7 @@ public class TransactionMapperTest {
         assertThat(dto.getValue()).isEqualTo(152.59);
         assertThat(dto.getDescription()).isEqualTo("Description");
         assertThat(dto.getProcessingDate().getYear()).isEqualTo(LocalDate.now().getYear());
-        assertThat(dto.getRelatedAccount().getId()).isEqualTo(1000L);
-        assertThat(dto.getIncomeStatement().getName()).isEqualTo("IncomeSource");
-        assertThat(dto.getTransactionType().getName()).isEqualTo("TypeName");
+        assertThat(dto.getTransactionType()).isEqualTo("TypeName");
     }
 
     @Test
@@ -46,15 +50,14 @@ public class TransactionMapperTest {
         // given
         TransactionDto dto = buildDto(10L);
         // when
+        when(typeMapper.mapStringToReferenceEntityType(any())).thenReturn(buildTransactionType(1000L));
         Transaction entity = mapper.toEntity(dto);
         // then
         assertThat(entity).isNotNull();
         assertThat(entity.getValue()).isEqualTo(10.5);
         assertThat(entity.getDescription()).isEqualTo("Description");
         assertThat(entity.getProcessingDate().getYear()).isEqualTo(LocalDate.now().getYear());
-        assertThat(entity.getRelatedAccount().getId()).isEqualTo(1L);
-        assertThat(entity.getIncomeStatement().getName()).isEqualTo("IncomeSource");
-        assertThat(entity.getTransactionType().getName()).isEqualTo("Credit");
+        assertThat(entity.getTransactionType().getName()).isEqualTo("TypeName");
     }
 
     public Transaction buildEntity(Long id) {
@@ -75,11 +78,9 @@ public class TransactionMapperTest {
         return TransactionDto
                 .builder()
                     .id(id)
-                    .transactionType(ReferenceEntityTypeDto.builder().name("Credit").build())
+                    .transactionType("TypeName")
                     .value(10.5)
                     .processingDate(LocalDate.now())
-                    .relatedAccount(AccountDto.builder().id(1L).build())
-                    .incomeStatement(IncomeStatementDto.builder().name("IncomeSource").build())
                     .description("Description")
                 .build();
     }

@@ -1,0 +1,25 @@
+server:
+  servlet:
+    context-path: /api/v1
+
+spring:
+  datasource:
+    url: jdbc:h2:mem:db;DB_CLOSE_DELAY=-1
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: sa
+    name: bumsoftdb
+  sql:
+    init:
+      platform: postgresql
+      mode: never
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: none
+      use-new-id-generator-mappings: false
+    properties:
+      hibernate:
+        default_schema: bumsoftdb
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    generate-ddl: false

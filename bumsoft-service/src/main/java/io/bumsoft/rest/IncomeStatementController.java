@@ -12,7 +12,7 @@ import java.time.LocalDate;
 
 @Slf4j
 @RestController
-@RequestMapping("/is")
+@RequestMapping(path = "/income-statements")
 public class IncomeStatementController {
 
     private final IncomeStatementService incomeStatementService;

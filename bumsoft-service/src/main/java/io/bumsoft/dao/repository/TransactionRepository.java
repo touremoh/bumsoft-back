@@ -10,7 +10,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Repository
-public interface TransactionRepository extends JpaRepository<Transaction, Long> {
+public interface TransactionRepository extends BumsoftRepository<Transaction, Long> {
 
     @Query("SELECT trx FROM Transaction trx " +
            "INNER JOIN IncomeStatement inc " +
