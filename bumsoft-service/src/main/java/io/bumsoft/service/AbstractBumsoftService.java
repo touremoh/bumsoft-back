@@ -11,7 +11,7 @@ public abstract class AbstractBumsoftService<E extends BumsoftEntity, R extends 
 
     private R repository;
 
-    public AbstractBumsoftService(R repository) {
+    protected AbstractBumsoftService(R repository) {
         this.repository = repository;
     }
 
