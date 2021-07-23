@@ -5,7 +5,10 @@ import io.bumsoft.dao.entity.Transaction;
 import io.bumsoft.dao.repository.IncomeStatementRepository;
 import io.bumsoft.dto.common.ExpenditureSummary;
 import io.bumsoft.dto.common.ExpenseItem;
+import io.bumsoft.dto.common.IncomeStatementDto;
 import io.bumsoft.helper.BumsoftObjectBuilder;
+import io.bumsoft.mapper.AbstractObjectsMapper;
+import io.bumsoft.mapper.IncomeStatementMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,15 +21,18 @@ import static java.util.Optional.ofNullable;
 
 @Slf4j
 @Service
-public class IncomeStatementService extends AbstractBumsoftService<IncomeStatement, IncomeStatementRepository> {
+public class IncomeStatementService extends AbstractBumsoftService<IncomeStatement, IncomeStatementRepository, IncomeStatementDto> {
 
     private static final String INCOME_TYPE_EXPENSE = "EXPENSE";
 
     private final IncomeStatementRepository repository;
+    private final AbstractObjectsMapper<IncomeStatement, IncomeStatementDto> mapper;
 
     @Autowired
-    public IncomeStatementService(IncomeStatementRepository repository) {
+    public IncomeStatementService(IncomeStatementRepository repository, IncomeStatementMapper mapper) {
+        super(repository, mapper);
         this.repository = repository;
+        this.mapper = mapper;
     }
 
     public ExpenditureSummary getExpenditureSummary(Long userId, LocalDate from, LocalDate until) {
