@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 @Slf4j
 public abstract class AbstractBumsoftController<S extends BumsoftService> {
 
-    private final S myService;
+    private BumsoftService myService;
 
     protected AbstractBumsoftController(S myService) {
         this.myService = myService;
