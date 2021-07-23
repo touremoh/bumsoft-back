@@ -32,7 +32,7 @@ public class AccountService extends AbstractBumsoftService<Account, AccountRepos
         this.mapper = mapper;
     }
 
-    public ResponseEntity<BumsoftResponse> getAccountSnapshot(final Long accountId) {
+    public ResponseEntity<BumsoftResponse> findAccountBalance(final Long accountId) {
         Optional<Account>  response = this.repository.findById(accountId);
         if (response.isPresent()) {
             Account account = response.get();

@@ -28,8 +28,8 @@ public class AccountController extends AbstractBumsoftController<AbstractBumsoft
         this.accountService = accountService;
     }
 
-    @GetMapping(path = "/{accountId}/snapshot", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(path = "/{accountId}/balance", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<BumsoftResponse> findAccountBalance(@PathVariable Long accountId) {
-        return accountService.getAccountSnapshot(accountId);
+        return accountService.findAccountBalance(accountId);
     }
 }
