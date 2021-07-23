@@ -5,7 +5,6 @@ import io.bumsoft.dao.entity.BumsoftEntity;
 import io.bumsoft.dao.repository.BumsoftRepository;
 import io.bumsoft.dto.BumsoftResponse;
 import io.bumsoft.dto.common.ErrorResponse;
-import io.bumsoft.exception.ResourceNotFoundException;
 import io.bumsoft.mapper.AbstractObjectsMapper;
 import lombok.NoArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import java.util.Optional;
 
 @NoArgsConstructor
-public abstract class AbstractBumsoftService<E extends BumsoftEntity, R extends BumsoftRepository<E, Long>, D extends BumsoftResponse> {
+public abstract class AbstractBumsoftService<E extends BumsoftEntity, R extends BumsoftRepository<E, Long>, D extends BumsoftResponse> implements BumsoftService {
 
     private R repository;
     private AbstractObjectsMapper<E, D> mapper;

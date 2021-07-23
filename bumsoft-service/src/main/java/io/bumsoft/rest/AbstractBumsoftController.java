@@ -1,10 +1,7 @@
 package io.bumsoft.rest;
 
-import io.bumsoft.dao.entity.BumsoftEntity;
-import io.bumsoft.dao.repository.BumsoftRepository;
 import io.bumsoft.dto.BumsoftResponse;
-import io.bumsoft.mapper.AbstractObjectsMapper;
-import io.bumsoft.service.AbstractBumsoftService;
+import io.bumsoft.service.BumsoftService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -12,14 +9,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 @Slf4j
-public abstract class AbstractBumsoftController<E extends BumsoftEntity, R extends BumsoftRepository<E, Long>, S extends AbstractBumsoftService<E, R, D>, D extends BumsoftResponse> {
+public abstract class AbstractBumsoftController<S extends BumsoftService> {
 
     private final S myService;
-    private final AbstractObjectsMapper<E, D> mapper;
 
-    protected AbstractBumsoftController(S myService, AbstractObjectsMapper<E, D> mapper) {
+    protected AbstractBumsoftController(S myService) {
         this.myService = myService;
-        this.mapper = mapper;
     }
 
     @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)

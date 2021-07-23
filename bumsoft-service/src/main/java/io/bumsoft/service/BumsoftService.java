@@ -1,13 +1,8 @@
 package io.bumsoft.service;
 
-import io.bumsoft.dao.entity.BumsoftEntity;
-import io.bumsoft.exception.ResourceNotFoundException;
+import io.bumsoft.dto.BumsoftResponse;
+import org.springframework.http.ResponseEntity;
 
-/**
- *
- * @param <E> the ype of entity we are trying to find
- * @param <T> the parameter we are giving to the service for the resource
- */
-public interface BumsoftService<E extends BumsoftEntity, T> {
-    E findById(T id) throws ResourceNotFoundException;
+public interface BumsoftService {
+    ResponseEntity<BumsoftResponse> findById(Long id);
 }
