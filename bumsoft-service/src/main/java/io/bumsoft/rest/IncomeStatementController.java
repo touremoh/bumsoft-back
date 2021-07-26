@@ -5,6 +5,7 @@ import io.bumsoft.service.IncomeStatementService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,12 +23,13 @@ public class IncomeStatementController {
         this.incomeStatementService = incomeStatementService;
     }
 
-    @GetMapping(path = "/summary")
-    public ResponseEntity<BumsoftResponse> expenditureSummary(
+    @GetMapping(path = "/summary", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<BumsoftResponse> findByIncomeType(
             @RequestParam("userId") Long userId,
+            @RequestParam("incomeType") String incomeType,
             @RequestParam("from") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate from,
             @RequestParam("until") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate until) {
         log.info("[IncomeStatement] - Expenditure summary");
-        return ResponseEntity.ok(this.incomeStatementService.getExpenditureSummary(userId, from, until));
+        return ResponseEntity.ok(this.incomeStatementService.findByIncomeType(userId, from, until, incomeType));
     }
 }

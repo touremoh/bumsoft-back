@@ -15,7 +15,7 @@ public class ExpenditureSummary implements BumsoftResponse {
     private LocalDate from;
     private LocalDate until;
     private List<ExpenseItem> expenseItems;
-    private Double totalExpectedValue;
-    private Double totalActualValue;
-    private Double totalRemainingValue;
+    private Double totalExpectedAmount;
+    private Double totalActualAmount;
+    private Double totalDelta;
 }

@@ -8,7 +8,6 @@ import io.bumsoft.dto.BumsoftResponse;
 import io.bumsoft.dto.acounts.AccountSnapshot;
 import io.bumsoft.dto.common.AccountDto;
 import io.bumsoft.dto.common.ErrorResponse;
-import io.bumsoft.exception.ResourceNotFoundException;
 import io.bumsoft.mapper.AbstractObjectsMapper;
 import io.bumsoft.mapper.AccountMapper;
 import lombok.extern.slf4j.Slf4j;

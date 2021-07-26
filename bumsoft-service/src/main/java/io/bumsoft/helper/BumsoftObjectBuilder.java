@@ -13,22 +13,22 @@ public class BumsoftObjectBuilder {
         return ExpenseItem
                 .builder()
                     .label(expense.getName())
-                    .expectedValue(expense.getExpectedAmount())
-                    .actualValue(actualValue)
-                    .remainingValue(expense.getExpectedAmount() - actualValue)
+                    .expectedAmount(expense.getExpectedAmount())
+                    .actualAmount(actualValue)
+                    .delta(expense.getExpectedAmount() - actualValue)
                 .build();
     }
     public static ExpenditureSummary build(List<ExpenseItem> expenseItems, LocalDate from, LocalDate until) {
-        Double expectedValue = expenseItems.stream().mapToDouble(ExpenseItem::getExpectedValue).sum();
-        Double actualValue = expenseItems.stream().mapToDouble(ExpenseItem::getActualValue).sum();
+        Double expectedValue = expenseItems.stream().mapToDouble(ExpenseItem::getExpectedAmount).sum();
+        Double actualValue = expenseItems.stream().mapToDouble(ExpenseItem::getActualAmount).sum();
         return ExpenditureSummary
                 .builder()
                     .from(from)
                     .until(until)
                     .expenseItems(expenseItems)
-                    .totalExpectedValue(expectedValue)
-                    .totalActualValue(actualValue)
-                    .totalRemainingValue(expectedValue - actualValue)
+                    .totalExpectedAmount(expectedValue)
+                    .totalActualAmount(actualValue)
+                    .totalDelta(expectedValue - actualValue)
                 .build();
     }
 }

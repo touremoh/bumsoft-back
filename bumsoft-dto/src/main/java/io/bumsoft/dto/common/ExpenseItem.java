@@ -10,7 +10,7 @@ import lombok.Setter;
 @Builder
 public class ExpenseItem implements BumsoftResponse {
     private String label;
-    private Double expectedValue;
-    private Double actualValue;
-    private Double remainingValue;
+    private Double expectedAmount;
+    private Double actualAmount;
+    private Double delta;
 }

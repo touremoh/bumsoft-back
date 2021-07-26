@@ -35,8 +35,8 @@ public class IncomeStatementService extends AbstractBumsoftService<IncomeStateme
         this.mapper = mapper;
     }
 
-    public ExpenditureSummary getExpenditureSummary(Long userId, LocalDate from, LocalDate until) {
-        List<IncomeStatement> expenses = repository.findAllByIncomeType(userId, INCOME_TYPE_EXPENSE);
+    public ExpenditureSummary findByIncomeType(Long userId, LocalDate from, LocalDate until, final String incomeType) {
+        List<IncomeStatement> expenses = repository.findAllByIncomeType(userId, incomeType);
         List<ExpenseItem> expenseItems = new ArrayList<>();
 
         for (IncomeStatement expense : expenses) {
