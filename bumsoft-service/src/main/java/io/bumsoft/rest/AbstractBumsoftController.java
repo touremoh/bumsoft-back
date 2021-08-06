@@ -19,6 +19,6 @@ public abstract class AbstractBumsoftController<S extends BumsoftService> {
 
     @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<BumsoftResponse> findById(@PathVariable long id) {
-        return myService.findById(id);
+        return myService.read(id);
     }
 }
