@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ReferenceEntityTypeRepository extends BumsoftRepository<ReferenceEntityType, Long> {
 
+    ReferenceEntityType findByName(String name);
 }

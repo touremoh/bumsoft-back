@@ -23,8 +23,6 @@ import static java.util.Optional.ofNullable;
 @Service
 public class IncomeStatementService extends AbstractBumsoftService<IncomeStatement, IncomeStatementRepository, IncomeStatementDto> {
 
-    private static final String INCOME_TYPE_EXPENSE = "EXPENSE";
-
     private final IncomeStatementRepository repository;
     private final AbstractObjectsMapper<IncomeStatement, IncomeStatementDto> mapper;
 
@@ -48,5 +46,27 @@ public class IncomeStatementService extends AbstractBumsoftService<IncomeStateme
             expenseItems.add(BumsoftObjectBuilder.build(expense, Math.abs(actualValue)));
         }
         return BumsoftObjectBuilder.build(expenseItems, from, until);
+    }
+
+    /**
+     * This method is used to process the object before persisting it
+     *
+     * @param object to be process before persistence
+     * @return the entity to be persisted
+     */
+    @Override
+    public IncomeStatement processBeforeCreate(IncomeStatementDto object) {
+        return null;
+    }
+
+    /**
+     * Process after the object is persisted
+     *
+     * @param entity persisted object
+     * @return void
+     */
+    @Override
+    public IncomeStatementDto processAfterCreate(IncomeStatement entity) {
+        return null;
     }
 }

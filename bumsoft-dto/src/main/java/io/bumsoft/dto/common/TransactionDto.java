@@ -1,6 +1,6 @@
 package io.bumsoft.dto.common;
 
-import io.bumsoft.dto.BumsoftResponse;
+import io.bumsoft.dto.BumsoftDto;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -8,7 +8,9 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @Builder
-public class TransactionDto implements BumsoftResponse  {
+@NoArgsConstructor
+@AllArgsConstructor
+public class TransactionDto implements BumsoftDto {
 
     // Unique identifier of the transaction
     private Long id;
@@ -24,4 +26,10 @@ public class TransactionDto implements BumsoftResponse  {
 
     // Description
     private String description;
+
+    // Related account
+    private Long relatedAccountId;
+
+    // Income Statement
+    private Long incomeStatementId;
 }

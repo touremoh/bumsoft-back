@@ -6,12 +6,13 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
-public abstract class BumsoftUserMapper implements AbstractObjectsMapper<BumsoftUser, BumsoftUserDto> {
+public interface BumsoftUserMapper extends AbstractObjectsMapper<BumsoftUser, BumsoftUserDto> {
 
     @Override
-    public BumsoftUserDto toDto(BumsoftUser entity) {
+    default public BumsoftUserDto toDto(BumsoftUser entity) {
         return this.toDtoIgnoringPassword(entity);
     }
+
     @Mapping(target = "password", ignore = true)
-    abstract BumsoftUserDto toDtoIgnoringPassword(BumsoftUser entity);
+    BumsoftUserDto toDtoIgnoringPassword(BumsoftUser entity);
 }

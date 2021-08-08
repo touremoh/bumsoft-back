@@ -1,5 +1,6 @@
 package io.bumsoft.dto.common;
 
+import io.bumsoft.dto.BumsoftDto;
 import io.bumsoft.dto.BumsoftResponse;
 import lombok.*;
 
@@ -9,7 +10,9 @@ import java.util.List;
 @Getter
 @Setter
 @Builder
-public class AccountDto implements BumsoftResponse {
+@NoArgsConstructor
+@AllArgsConstructor
+public class AccountDto implements BumsoftDto {
     private Long id;
     private String name;
     private LocalDate updatedAt;

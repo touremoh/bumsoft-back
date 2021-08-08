@@ -53,4 +53,28 @@ public class AccountService extends AbstractBumsoftService<Account, AccountRepos
                     .build();
         return ResponseEntity.status(BumsoftResponseCode.RESOURCE_NOT_FOUND.getCode()).body(errorResponse);
     }
+
+    /**
+     * This method is used to process the object before persisting it
+     *
+     * @param object to be process before persistence
+     * @return the entity to be persisted
+     */
+    @Override
+    public Account processBeforeCreate(AccountDto object) {
+        log.info("Processing the account");
+        return null;
+    }
+
+    /**
+     * Process after the object is persisted
+     *
+     * @param entity persisted object
+     * @return void
+     */
+    @Override
+    public AccountDto processAfterCreate(Account entity) {
+        log.info("After creating the account [" + entity.getId() + "]");
+        return null;
+    }
 }

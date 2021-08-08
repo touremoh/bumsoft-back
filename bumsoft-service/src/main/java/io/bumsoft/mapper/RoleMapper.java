@@ -5,5 +5,5 @@ import io.bumsoft.dto.common.RoleDto;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
-public abstract class RoleMapper implements AbstractObjectsMapper<Role, RoleDto> {
+public interface RoleMapper extends AbstractObjectsMapper<Role, RoleDto> {
 }

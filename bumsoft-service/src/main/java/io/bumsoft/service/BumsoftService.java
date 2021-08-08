@@ -1,37 +1,38 @@
 package io.bumsoft.service;
 
 import io.bumsoft.dao.entity.BumsoftEntity;
+import io.bumsoft.dto.BumsoftDto;
 import io.bumsoft.dto.BumsoftResponse;
+import io.bumsoft.exception.ResourceNotFoundException;
 import org.springframework.http.ResponseEntity;
 
-public interface BumsoftService<E extends BumsoftEntity> {
+public interface BumsoftService<D extends BumsoftDto> {
 
     /**
      * Create a new entity
-     * @param entity to be created
+     * @param object to be created
      * @return entity if successfully created
      */
-    ResponseEntity<BumsoftResponse> create(E entity);
+    D create(D object);
 
     /**
      * Find an entity by its ID
      * @param id of the element to be found
      * @return the entity
      */
-    ResponseEntity<BumsoftResponse> read(Long id);
+    D read(long id) throws ResourceNotFoundException;
 
     /**
      * Update an element in the table represented by the entity E
-     * @param id of the element to be updated
-     * @param entity to be updated
+     * @param object to be updated
      * @return the updated entity
      */
-    ResponseEntity<BumsoftResponse> update(Long id, E entity);
+    D update(D object);
 
     /**
      * Delete the element from the table
      * @param id of the element to be deleted
      * @return nothing
      */
-    ResponseEntity<Void> delete(Long id);
+    void delete(long id);
 }

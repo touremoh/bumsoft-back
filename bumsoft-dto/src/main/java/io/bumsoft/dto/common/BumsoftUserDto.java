@@ -1,12 +1,15 @@
 package io.bumsoft.dto.common;
 
+import io.bumsoft.dto.BumsoftDto;
 import io.bumsoft.dto.BumsoftResponse;
 import lombok.*;
 
 @Getter
 @Setter
 @Builder
-public class BumsoftUserDto implements BumsoftResponse {
+@NoArgsConstructor
+@AllArgsConstructor
+public class BumsoftUserDto implements BumsoftDto {
     private Long id;
     private String firstName;
     private String lastName;

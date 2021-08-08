@@ -5,5 +5,5 @@ import io.bumsoft.dto.common.CreditCardInfoDto;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
-public abstract class CreditCardInfoMapper implements AbstractObjectsMapper<CreditCardInfo, CreditCardInfoDto> {
+public interface CreditCardInfoMapper extends AbstractObjectsMapper<CreditCardInfo, CreditCardInfoDto> {
 }

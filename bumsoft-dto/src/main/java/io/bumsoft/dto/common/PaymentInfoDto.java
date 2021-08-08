@@ -1,16 +1,17 @@
 package io.bumsoft.dto.common;
 
+import io.bumsoft.dto.BumsoftDto;
 import io.bumsoft.dto.BumsoftResponse;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 
 @Getter
 @Setter
 @Builder
-public class PaymentInfoDto implements BumsoftResponse  {
+@NoArgsConstructor
+@AllArgsConstructor
+public class PaymentInfoDto implements BumsoftDto {
     private Long id;
     private Double subscriptionPrice;
     private SubscriptionDto subscription;

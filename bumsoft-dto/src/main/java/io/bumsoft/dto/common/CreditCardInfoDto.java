@@ -1,16 +1,17 @@
 package io.bumsoft.dto.common;
 
+import io.bumsoft.dto.BumsoftDto;
 import io.bumsoft.dto.BumsoftResponse;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 
 @Getter
 @Setter
 @Builder
-public class CreditCardInfoDto implements BumsoftResponse  {
+@NoArgsConstructor
+@AllArgsConstructor
+public class CreditCardInfoDto implements BumsoftDto {
     private Long id;
     private String ownerFullName;
     private String cardNumber;

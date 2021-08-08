@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RestController
 @RequestMapping("/accounts")
-public class AccountController extends AbstractBumsoftController<AbstractBumsoftService<Account, AccountRepository, AccountDto>> {
+public class AccountController extends AbstractBumsoftController<Account, AccountDto, AccountRepository, AccountService> {
 
     private final AccountService accountService;
 

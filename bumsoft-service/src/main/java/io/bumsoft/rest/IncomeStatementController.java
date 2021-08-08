@@ -1,6 +1,10 @@
 package io.bumsoft.rest;
 
+import io.bumsoft.dao.entity.IncomeStatement;
+import io.bumsoft.dao.repository.IncomeStatementRepository;
 import io.bumsoft.dto.BumsoftResponse;
+import io.bumsoft.dto.common.IncomeStatementDto;
+import io.bumsoft.service.AbstractBumsoftService;
 import io.bumsoft.service.IncomeStatementService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,12 +18,13 @@ import java.time.LocalDate;
 @Slf4j
 @RestController
 @RequestMapping(path = "/income-statements")
-public class IncomeStatementController {
+public class IncomeStatementController extends AbstractBumsoftController<IncomeStatement, IncomeStatementDto, IncomeStatementRepository, IncomeStatementService> {
 
     private final IncomeStatementService incomeStatementService;
 
     @Autowired
     public IncomeStatementController(IncomeStatementService incomeStatementService) {
+        super(incomeStatementService);
         this.incomeStatementService = incomeStatementService;
     }
 
