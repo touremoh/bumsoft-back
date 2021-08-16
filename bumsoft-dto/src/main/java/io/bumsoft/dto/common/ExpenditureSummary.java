@@ -1,6 +1,6 @@
 package io.bumsoft.dto.common;
 
-import io.bumsoft.dto.BumsoftResponse;
+import io.bumsoft.dto.BumsoftDto;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -11,7 +11,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ExpenditureSummary implements BumsoftResponse {
+public class ExpenditureSummary implements BumsoftDto {
     private LocalDate from;
     private LocalDate until;
     private List<ExpenseItem> expenseItems;

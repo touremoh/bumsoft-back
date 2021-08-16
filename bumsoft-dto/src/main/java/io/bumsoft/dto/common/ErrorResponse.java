@@ -1,6 +1,6 @@
 package io.bumsoft.dto.common;
 
-import io.bumsoft.dto.BumsoftResponse;
+import io.bumsoft.dto.BumsoftDto;
 import lombok.*;
 
 @Getter
@@ -8,7 +8,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ErrorResponse implements BumsoftResponse {
+public class ErrorResponse implements BumsoftDto {
     private String errorMessage;
     private String errorReason;
 }

@@ -1,5 +1,8 @@
 package io.bumsoft.exception;
 
-public interface BumsoftException {
-    String getMessage();
+
+public class BumsoftException extends Exception {
+    public BumsoftException(String message) {
+        super(message);
+    }
 }

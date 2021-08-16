@@ -1,6 +1,6 @@
 package io.bumsoft.dto.common;
 
-import io.bumsoft.dto.BumsoftResponse;
+import io.bumsoft.dto.BumsoftDto;
 import lombok.*;
 
 @Getter
@@ -8,7 +8,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ExpenseItem implements BumsoftResponse {
+public class ExpenseItem implements BumsoftDto {
     private String label;
     private Double expectedAmount;
     private Double actualAmount;

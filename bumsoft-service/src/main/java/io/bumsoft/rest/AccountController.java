@@ -1,13 +1,13 @@
 package io.bumsoft.rest;
 
-import io.bumsoft.dao.entity.Account;
-import io.bumsoft.dao.repository.AccountRepository;
 import io.bumsoft.dto.BumsoftResponse;
 import io.bumsoft.dto.common.AccountDto;
-import io.bumsoft.service.AbstractBumsoftService;
+import io.bumsoft.exception.BumsoftException;
 import io.bumsoft.service.AccountService;
+import io.vavr.control.Either;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RestController
 @RequestMapping("/accounts")
-public class AccountController extends AbstractBumsoftController<Account, AccountDto, AccountRepository, AccountService> {
+public class AccountController extends AbstractBumsoftController<AccountDto, Long, AccountService> {
 
     private final AccountService accountService;
 
@@ -29,7 +29,10 @@ public class AccountController extends AbstractBumsoftController<Account, Accoun
     }
 
     @GetMapping(path = "/{accountId}/balance", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<BumsoftResponse> findAccountBalance(@PathVariable Long accountId) {
-        return accountService.findAccountBalance(accountId);
+    public ResponseEntity findAccountBalance(@PathVariable Long accountId) {
+        Either<BumsoftException, BumsoftResponse> response = accountService.findAccountBalance(accountId);
+        return response.isRight() ?
+                ResponseEntity.accepted().body(response.get()) :
+                ResponseEntity.status(HttpStatus.NOT_FOUND).body(response.getLeft().getMessage());
     }
 }
