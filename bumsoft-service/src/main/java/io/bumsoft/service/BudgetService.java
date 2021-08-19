@@ -29,7 +29,7 @@ public class BudgetService extends AbstractBumsoftService<Budget, BudgetDto, Bud
 
     public Either<BumsoftException, List<BudgetDto>> findByUserId(Long userId) {
         List<BudgetDto> userBudgets = this.repository.findByUserId(userId).stream().map(mapper::toDto).collect(Collectors.toList());
-        return userBudgets.isEmpty() ? Either.left(new BumsoftException("No budget found for user")) : Either.right(userBudgets);
+        return userBudgets.isEmpty() ? Either.left(new BumsoftException("No budget found for user " + userId)) : Either.right(userBudgets);
     }
 
     /**
