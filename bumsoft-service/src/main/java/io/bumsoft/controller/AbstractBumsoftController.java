@@ -1,4 +1,4 @@
-package io.bumsoft.rest;
+package io.bumsoft.controller;
 
 import io.bumsoft.dto.BumsoftDto;
 import io.bumsoft.helper.ApiResponse;

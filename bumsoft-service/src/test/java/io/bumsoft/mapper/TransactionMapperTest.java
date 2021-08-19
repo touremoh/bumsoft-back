@@ -1,11 +1,8 @@
 package io.bumsoft.mapper;
 
 import io.bumsoft.dao.entity.Account;
-import io.bumsoft.dao.entity.IncomeStatement;
 import io.bumsoft.dao.entity.ReferenceEntityType;
 import io.bumsoft.dao.entity.Transaction;
-import io.bumsoft.dto.common.IncomeStatementDto;
-import io.bumsoft.dto.common.ReferenceEntityTypeDto;
 import io.bumsoft.dto.common.TransactionDto;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -68,7 +65,6 @@ public class TransactionMapperTest {
         entity.setDescription("Description");
         entity.setProcessingDate(LocalDate.now());
         entity.setRelatedAccount(buildAccount(1000L));
-        entity.setIncomeStatement(buildIncomeStatement(1000L));
         entity.setTransactionType(buildTransactionType(1000L));
 
         return entity;
@@ -91,13 +87,6 @@ public class TransactionMapperTest {
         account.setName("Account");
         account.setDescription("Description");
         return account;
-    }
-
-    public IncomeStatement buildIncomeStatement(Long id) {
-        IncomeStatement statement = new IncomeStatement();
-        statement.setId(id);
-        statement.setName("IncomeSource");
-        return statement;
     }
 
     public ReferenceEntityType buildTransactionType(Long id) {

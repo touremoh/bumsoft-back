@@ -24,6 +24,9 @@ public class Account implements BumsoftEntity {
     private Long id;
 
     @Column(name = "ACC_NAME")
+    private String accountNumber;
+
+    @Column(name = "ACC_NUM")
     private String name;
 
     @Column(name = "ACC_DESC")
@@ -34,7 +37,7 @@ public class Account implements BumsoftEntity {
     private BumsoftUser user;
 
     @ManyToOne
-    @JoinColumn(name = "ACC_REF_TYPE_ID")
+    @JoinColumn(name = "ACC_TYPE")
     private ReferenceEntityType accountType;
 
     @Column(name = "ACC_CREATED_AT")

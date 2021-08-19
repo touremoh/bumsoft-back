@@ -1,4 +1,4 @@
-package io.bumsoft.rest;
+package io.bumsoft.controller;
 
 import io.bumsoft.dto.common.TransactionDto;
 import io.bumsoft.service.TransactionService;

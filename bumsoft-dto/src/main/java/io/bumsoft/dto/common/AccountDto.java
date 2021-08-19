@@ -13,6 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 public class AccountDto implements BumsoftDto {
     private Long id;
+    private String accountNumber;
     private String name;
     private LocalDate updatedAt;
     private String description;

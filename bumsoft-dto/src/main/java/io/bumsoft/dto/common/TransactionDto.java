@@ -30,6 +30,4 @@ public class TransactionDto implements BumsoftDto {
     // Related account
     private Long relatedAccountId;
 
-    // Income Statement
-    private Long incomeStatementId;
 }

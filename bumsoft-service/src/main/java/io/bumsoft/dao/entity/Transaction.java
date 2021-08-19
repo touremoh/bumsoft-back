@@ -26,15 +26,14 @@ public class Transaction implements BumsoftEntity {
     @Column(name = "TRX_DATE")
     private LocalDate processingDate;
 
+    @Column(name = "TRX_ACC_ID")
+    private Long relatedAccountId;
+
     @ManyToOne
-    @JoinColumn(name = "TRX_ACC_ID")
+    @JoinColumn(name = "TRX_ACC_ID", insertable = false, updatable = false)
     private Account relatedAccount;
 
     @ManyToOne
-    @JoinColumn(name = "TRX_INC_STMT_ID")
-    private IncomeStatement incomeStatement;
-
-    @ManyToOne
-    @JoinColumn(name = "TRX_REF_TYP_ID")
+    @JoinColumn(name = "TRX_REF_TYP_ID", insertable = false, updatable = false)
     private ReferenceEntityType transactionType;
 }
