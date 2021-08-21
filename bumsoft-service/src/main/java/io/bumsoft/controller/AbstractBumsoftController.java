@@ -27,8 +27,8 @@ public abstract class AbstractBumsoftController<D extends BumsoftDto, ID, S exte
         return ApiResponse.ofCreate(service.create(myDto));
     }
 
-    @PutMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity update(@RequestParam ID id, @RequestBody D myDto) {
+    @PutMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity update(@PathVariable ID id, @RequestBody D myDto) {
         return ApiResponse.ofUpdate(service.update(id, myDto));
     }
 

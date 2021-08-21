@@ -12,11 +12,13 @@ import io.bumsoft.mapper.AccountMapper;
 import io.bumsoft.mapper.ReferenceEntityTypeMapper;
 import io.vavr.control.Either;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 
+import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
 @Slf4j
@@ -55,8 +57,18 @@ public class AccountService extends AbstractBumsoftService<Account, AccountDto, 
             throw new BumsoftException("The ID must be null for a create operation");
         }
         if (nonNull(entity.getAccountNumber())) {
-            log.error("Account creation failed - The account number must be null for a create operation");
+            log.error("Account creation failed - account number provided");
             throw new BumsoftException("The account number must be null for a create operation");
+        }
+
+        if (isNull(entity.getUserId())) {
+            log.error("Account creation failed - The user ID is missing");
+            throw new BumsoftException("The user id is mandatory");
+        }
+
+        if (Strings.isEmpty(entity.getName())) {
+            log.error("Account creation failed - The account name is mandatory");
+            throw new BumsoftException("The account name is mandatory");
         }
 
         // Set account number
@@ -91,13 +103,29 @@ public class AccountService extends AbstractBumsoftService<Account, AccountDto, 
 
     /**
      * Additional process before update
-     *
      * @param entity
      * @throws BumsoftException
      */
     @Override
     void processBeforeUpdate(Long id, Account entity) throws BumsoftException {
         log.info("Account creation process before update");
+
+        this.repository.findById(id).ifPresent(account -> {
+            if (Strings.isEmpty(entity.getAccountNumber())) {
+                entity.setAccountNumber(account.getAccountNumber());
+            }
+            if (Strings.isEmpty(entity.getName())) {
+                entity.setName(account.getName());
+            }
+            if (Strings.isEmpty(entity.getDescription())) {
+                entity.setDescription(account.getDescription());
+            }
+            entity.setId(account.getId());
+            entity.setUserId(account.getUserId());
+            entity.setAccountType(account.getAccountType());
+            entity.setCreatedAt(account.getCreatedAt());
+            entity.setUpdatedAt(LocalDate.now());
+        });
     }
 
     /**
@@ -108,7 +136,12 @@ public class AccountService extends AbstractBumsoftService<Account, AccountDto, 
      */
     @Override
     void processAfterUpdate(Long id, Account entity) throws BumsoftException {
-        log.info("Process after update");
+        log.info("Account update process after save operation");
+        if (!id.equals(entity.getId())) {
+            log.error("Account update failed!");
+            throw new BumsoftException("Account update failed!");
+        }
+        log.info("Account successfully updated!");
     }
 
     public Either<BumsoftException, BumsoftResponse> findAccountBalance(final Long accountId) {
