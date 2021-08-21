@@ -10,4 +10,5 @@ import java.util.Optional;
 @Repository
 public interface AccountRepository extends BumsoftRepository<Account, Long> {
     Optional<Account> findByUserAndAccountType(BumsoftUser user, ReferenceEntityType accountType);
+    Optional<Account> findByAccountNumber(String accountNumber);
 }

@@ -5,26 +5,40 @@ import io.bumsoft.dao.repository.AccountRepository;
 import io.bumsoft.dto.BumsoftResponse;
 import io.bumsoft.dto.acounts.AccountSnapshot;
 import io.bumsoft.dto.common.AccountDto;
+import io.bumsoft.dto.common.ReferenceEntityTypeDto;
 import io.bumsoft.dto.common.TransactionDto;
 import io.bumsoft.exception.BumsoftException;
 import io.bumsoft.mapper.AccountMapper;
+import io.bumsoft.mapper.ReferenceEntityTypeMapper;
 import io.vavr.control.Either;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+
+import static java.util.Objects.nonNull;
 
 @Slf4j
 @Service
 public class AccountService extends AbstractBumsoftService<Account, AccountDto, AccountMapper, Long, AccountRepository> {
 
     private final AccountRepository repository;
-    private final AccountMapper mapper;
-
+    private final ReferenceEntityTypeService referenceService;
+    private final ReferenceEntityTypeMapper referenceMapper;
+    private final AccountNumberGenerator accountNumberGenerator;
     @Autowired
-    public AccountService(AccountRepository repository, AccountMapper mapper) {
+    public AccountService(
+            AccountRepository repository,
+            AccountMapper mapper,
+            ReferenceEntityTypeService referenceService,
+            ReferenceEntityTypeMapper referenceMapper,
+            AccountNumberGenerator accountNumberGenerator) {
         super(repository, mapper);
         this.repository = repository;
-        this.mapper = mapper;
+        this.referenceService = referenceService;
+        this.referenceMapper = referenceMapper;
+        this.accountNumberGenerator = accountNumberGenerator;
     }
 
     /**
@@ -35,7 +49,28 @@ public class AccountService extends AbstractBumsoftService<Account, AccountDto, 
      */
     @Override
     void processBeforeCreate(Account entity) throws BumsoftException {
-        log.info("Process  before create");
+        log.info("Account creation process before create");
+        if (nonNull(entity.getId())) {
+            log.error("Account creation failed - The account id must be null for a create operation");
+            throw new BumsoftException("The ID must be null for a create operation");
+        }
+        if (nonNull(entity.getAccountNumber())) {
+            log.error("Account creation failed - The account number must be null for a create operation");
+            throw new BumsoftException("The account number must be null for a create operation");
+        }
+
+        // Set account number
+        entity.setAccountNumber(accountNumberGenerator.generateUniqueAccountNumber(entity.getAccountType().getName(), 7));
+
+        // Set creation date
+        entity.setCreatedAt(LocalDate.now());
+
+        // Set account type
+        Either<BumsoftException, ReferenceEntityTypeDto> ref = referenceService.findByName(entity.getAccountType().getName());
+        if (ref.isLeft()) {
+            throw ref.getLeft();
+        }
+        entity.setAccountType(referenceMapper.toEntity(ref.get()));
     }
 
     /**
@@ -46,7 +81,12 @@ public class AccountService extends AbstractBumsoftService<Account, AccountDto, 
      */
     @Override
     void processAfterCreate(Account entity) throws BumsoftException {
-        log.info("Process after create");
+        log.info("Account creation process after create");
+        if (!this.repository.existsById(entity.getId())) {
+            log.error("Account creation failed!");
+            throw new BumsoftException("Account creation failed");
+        }
+        log.info("Account successfully created!");
     }
 
     /**
@@ -57,7 +97,7 @@ public class AccountService extends AbstractBumsoftService<Account, AccountDto, 
      */
     @Override
     void processBeforeUpdate(Long id, Account entity) throws BumsoftException {
-        log.info("Process before update");
+        log.info("Account creation process before update");
     }
 
     /**
@@ -85,6 +125,5 @@ public class AccountService extends AbstractBumsoftService<Account, AccountDto, 
             return Either.right(accountSnapshot);
         }
         return Either.left(response.getLeft());
-
     }
 }

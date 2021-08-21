@@ -2,9 +2,12 @@ package io.bumsoft.service;
 
 import io.bumsoft.dao.entity.Transaction;
 import io.bumsoft.dao.repository.TransactionRepository;
+import io.bumsoft.dto.common.ReferenceEntityTypeDto;
 import io.bumsoft.dto.common.TransactionDto;
 import io.bumsoft.exception.BumsoftException;
+import io.bumsoft.mapper.ReferenceEntityTypeMapper;
 import io.bumsoft.mapper.TransactionMapper;
+import io.vavr.control.Either;
 import lombok.extern.slf4j.Slf4j;
 import org.mapstruct.ap.internal.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,13 +23,15 @@ public class TransactionService extends AbstractBumsoftService<Transaction, Tran
 
     private final TransactionRepository repository;
     private final ReferenceEntityTypeService referenceEntityTypeService;
+    private final ReferenceEntityTypeMapper referenceMapper;
     private final TransactionMapper mapper;
 
     @Autowired
-    public TransactionService(TransactionRepository repository, ReferenceEntityTypeService referenceEntityTypeService, TransactionMapper mapper) {
+    public TransactionService(TransactionRepository repository, ReferenceEntityTypeService referenceEntityTypeService, ReferenceEntityTypeMapper referenceMapper, TransactionMapper mapper) {
         super(repository, mapper);
         this.repository = repository;
         this.referenceEntityTypeService = referenceEntityTypeService;
+        this.referenceMapper = referenceMapper;
         this.mapper = mapper;
     }
 
@@ -39,7 +44,11 @@ public class TransactionService extends AbstractBumsoftService<Transaction, Tran
     @Override
     void processBeforeCreate(Transaction entity) throws BumsoftException {
         entity.setProcessingDate(LocalDate.now());
-        entity.setTransactionType(referenceEntityTypeService.findByName(entity.getTransactionType().getName()));
+        Either<BumsoftException, ReferenceEntityTypeDto> ref = referenceEntityTypeService.findByName(entity.getTransactionType().getName());
+        if (ref.isLeft()) {
+            throw ref.getLeft();
+        }
+        entity.setTransactionType(referenceMapper.toEntity(ref.get()));
     }
 
     /**

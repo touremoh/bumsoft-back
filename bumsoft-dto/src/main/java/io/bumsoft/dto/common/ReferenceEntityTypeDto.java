@@ -9,6 +9,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ReferenceEntityTypeDto implements BumsoftDto {
+    private Long id;
     private String group;
     private String name;
 }

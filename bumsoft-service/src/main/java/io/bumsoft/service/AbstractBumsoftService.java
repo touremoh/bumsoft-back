@@ -31,19 +31,19 @@ public abstract class AbstractBumsoftService<E extends BumsoftEntity, D extends 
     @Override
     public Either<BumsoftException, D> create(D dto) {
         try {
-            log.info("Starting object creating process");
+            // Map the object to an entity type
             E entity = mapper.toEntity(dto);
 
-            log.info("Process before create");
+            // Process the object before create
             this.processBeforeCreate(entity);
 
-            log.info("Persisting the object");
+            // Persist the object
             E result = this.repository.save(entity);
 
-            log.info("Process after create");
+            // Process the object after create
             this.processAfterCreate(result);
 
-            log.info("Object successfully created");
+            // Map to a Data Transfer Object type and returns the object
             return Either.right(mapper.toDto(result));
         } catch (BumsoftException e) {
             log.debug("An error occurred while trying to create the object");

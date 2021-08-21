@@ -3,7 +3,6 @@ package io.bumsoft.dto.common;
 import io.bumsoft.dto.BumsoftDto;
 import lombok.*;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @Getter
@@ -13,9 +12,9 @@ import java.util.List;
 @AllArgsConstructor
 public class AccountDto implements BumsoftDto {
     private Long id;
+    private Long userId;
     private String accountNumber;
     private String name;
-    private LocalDate updatedAt;
     private String description;
     private String accountType;
     private List<TransactionDto> transactions;

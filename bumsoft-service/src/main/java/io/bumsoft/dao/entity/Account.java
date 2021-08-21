@@ -23,17 +23,20 @@ public class Account implements BumsoftEntity {
     @SequenceGenerator(name = "account_sequence", sequenceName = "ACCOUNT_SEQ", allocationSize = 1)
     private Long id;
 
-    @Column(name = "ACC_NAME")
+    @Column(name = "ACC_NUM")
     private String accountNumber;
 
-    @Column(name = "ACC_NUM")
+    @Column(name = "ACC_NAME")
     private String name;
 
     @Column(name = "ACC_DESC")
     private String description;
 
+    @Column(name = "ACC_BS_USR_ID")
+    private Long userId;
+
     @ManyToOne
-    @JoinColumn(name = "ACC_BS_USR_ID")
+    @JoinColumn(name = "ACC_BS_USR_ID", insertable = false, updatable = false)
     private BumsoftUser user;
 
     @ManyToOne
