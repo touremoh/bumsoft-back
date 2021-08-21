@@ -7,5 +7,5 @@ import java.util.List;
 
 @Repository
 public interface AutomatedPlanRepository extends BumsoftRepository<AutomatedPlan, Long> {
-    List<AutomatedPlan> findByUserId(Long userId);
+    List<AutomatedPlan> findByUserIdAndIsActiveIsTrue(Long userId);
 }

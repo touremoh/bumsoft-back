@@ -20,8 +20,8 @@ public class BudgetController  extends AbstractBumsoftController<BudgetDto, Long
         this.service = service;
     }
 
-    @GetMapping(path = "{userId}/all", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity findByUserId(@PathVariable Long userId) {
+    @GetMapping(path = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity findByUserId(@RequestParam Long userId) {
         return ApiResponse.ofRead(service.findByUserId(userId));
     }
 }

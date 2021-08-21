@@ -27,7 +27,7 @@ public class AutomatedPlanService extends AbstractBumsoftService<AutomatedPlan, 
     }
 
     public Either<BumsoftException, List<AutomatedPlanDto>> findByUserId(Long userId) {
-        List<AutomatedPlanDto> plans = this.repository.findByUserId(userId).stream().map(mapper::toDto).collect(Collectors.toList());
+        List<AutomatedPlanDto> plans = this.repository.findByUserIdAndIsActiveIsTrue(userId).stream().map(mapper::toDto).collect(Collectors.toList());
         return plans.isEmpty() ? Either.left(new BumsoftException("No plan found for user " + userId)) : Either.right(plans);
     }
 

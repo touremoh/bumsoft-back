@@ -6,10 +6,7 @@ import io.bumsoft.service.AutomatedPlanService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
@@ -23,8 +20,8 @@ public class AutomatedPlanController extends AbstractBumsoftController<Automated
         this.service = service;
     }
 
-    @GetMapping(path = "{userId}/all", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity findByUserId(@PathVariable Long userId) {
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity findByUserId(@RequestParam Long userId) {
         return ApiResponse.ofRead(service.findByUserId(userId));
     }
 }
