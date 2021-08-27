@@ -20,8 +20,8 @@ public class ReferenceEntityTypeService extends AbstractBumsoftService<Reference
     private final ReferenceEntityTypeMapper mapper;
 
     @Autowired
-    public ReferenceEntityTypeService(ReferenceEntityTypeRepository repository, ReferenceEntityTypeMapper mapper) {
-        super(repository, mapper);
+    public ReferenceEntityTypeService(ReferenceEntityTypeRepository repository, ReferenceEntityTypeMapper mapper, ValidationService<ReferenceEntityType> validationService) {
+        super(repository, mapper, validationService);
         this.repository = repository;
         this.mapper = mapper;
     }

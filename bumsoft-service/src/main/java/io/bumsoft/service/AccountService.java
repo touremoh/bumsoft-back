@@ -29,14 +29,16 @@ public class AccountService extends AbstractBumsoftService<Account, AccountDto, 
     private final ReferenceEntityTypeService referenceService;
     private final ReferenceEntityTypeMapper referenceMapper;
     private final AccountNumberGenerator accountNumberGenerator;
+
     @Autowired
     public AccountService(
             AccountRepository repository,
             AccountMapper mapper,
             ReferenceEntityTypeService referenceService,
             ReferenceEntityTypeMapper referenceMapper,
-            AccountNumberGenerator accountNumberGenerator) {
-        super(repository, mapper);
+            AccountNumberGenerator accountNumberGenerator,
+            ValidationService<Account> validationService) {
+        super(repository, mapper, validationService);
         this.repository = repository;
         this.referenceService = referenceService;
         this.referenceMapper = referenceMapper;

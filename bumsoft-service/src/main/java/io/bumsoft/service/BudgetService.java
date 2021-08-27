@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,8 +22,8 @@ public class BudgetService extends AbstractBumsoftService<Budget, BudgetDto, Bud
     private final BudgetMapper mapper;
 
     @Autowired
-    protected BudgetService(BudgetRepository repository, BudgetMapper mapper) {
-        super(repository, mapper);
+    protected BudgetService(BudgetRepository repository, BudgetMapper mapper, ValidationService<Budget> validationService) {
+        super(repository, mapper, validationService);
         this.mapper = mapper;
         this.repository = repository;
     }
@@ -40,7 +41,8 @@ public class BudgetService extends AbstractBumsoftService<Budget, BudgetDto, Bud
      */
     @Override
     void processBeforeCreate(Budget entity) throws BumsoftException {
-
+        log.info("Budget Creation Before Update");
+        entity.setCreatedAt(LocalDate.now());
     }
 
     /**
@@ -51,7 +53,12 @@ public class BudgetService extends AbstractBumsoftService<Budget, BudgetDto, Bud
      */
     @Override
     void processAfterCreate(Budget entity) throws BumsoftException {
-
+        log.info("Checking if persistence was ok");
+        if (!this.repository.existsById(entity.getId())) {
+            log.error("Unable to persist object with ID: " + entity.getId());
+            throw new BumsoftException("The budget creation failed");
+        }
+        log.info("Budget object successfully persisted");
     }
 
     /**

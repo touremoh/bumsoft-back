@@ -20,8 +20,9 @@ public class AutomatedPlanService extends AbstractBumsoftService<AutomatedPlan, 
     private final AutomatedPlanRepository repository;
     private final AutomatedPlanMapper mapper;
 
-    protected AutomatedPlanService(AutomatedPlanRepository repository, AutomatedPlanMapper mapper) {
-        super(repository, mapper);
+
+    protected AutomatedPlanService(AutomatedPlanRepository repository, AutomatedPlanMapper mapper, ValidationService<AutomatedPlan> validationService) {
+        super(repository, mapper, validationService);
         this.repository = repository;
         this.mapper = mapper;
     }

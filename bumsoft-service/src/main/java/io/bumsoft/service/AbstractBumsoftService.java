@@ -10,16 +10,20 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.Optional;
 
+import static java.util.Objects.nonNull;
+
 @Slf4j
 public abstract class AbstractBumsoftService<E extends BumsoftEntity, D extends BumsoftDto, M extends AbstractObjectsMapper<E, D>, ID, R extends BumsoftRepository<E, ID>>
                 implements BumsoftService<D, ID> {
 
     private final R repository;
     private final M mapper;
+    private final ValidationService<E> validationService;
 
-    protected AbstractBumsoftService(R repository, M mapper) {
+    protected AbstractBumsoftService(R repository, M mapper, ValidationService<E> validationService) {
         this.repository = repository;
         this.mapper = mapper;
+        this.validationService = validationService;
     }
 
     /**
@@ -33,6 +37,9 @@ public abstract class AbstractBumsoftService<E extends BumsoftEntity, D extends 
         try {
             // Map the object to an entity type
             E entity = mapper.toEntity(dto);
+
+            // Initial checks
+            this.applyInitialCheckBeforeCreate(entity);
 
             // Process the object before create
             this.processBeforeCreate(entity);
@@ -48,6 +55,21 @@ public abstract class AbstractBumsoftService<E extends BumsoftEntity, D extends 
         } catch (BumsoftException e) {
             log.debug("An error occurred while trying to create the object");
             return Either.left(e);
+        }
+    }
+
+    public void applyInitialCheckBeforeCreate(E entity) throws BumsoftException {
+        // Checking if the ID is null
+        if (nonNull(entity.getId())) {
+            log.error("The id "+entity.getId()+" is not allowed here");
+            throw new BumsoftException("ID not allowed - The id should be null for create Operation");
+        }
+
+        // Validate object fields
+        if (validationService.notValid(entity)) {
+            final String message = validationService.getValidationErrorMessage(entity);
+            log.error("Invalid input - Error message is: " + message);
+            throw new BumsoftException(message);
         }
     }
 

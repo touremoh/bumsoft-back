@@ -1,8 +1,12 @@
 package io.bumsoft.dao.entity;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.*;
 import java.time.LocalDate;
 
 @Getter
@@ -18,9 +22,15 @@ public class Budget implements BumsoftEntity {
     @SequenceGenerator(name = "budget_sequence", sequenceName = "BUDGET_SEQ", allocationSize = 1)
     private Long id;
 
+    @Size(min = 2, max = 250, message = "The budget name should be between 2 and 250 characters long")
+    @NotEmpty(message = "The budget name is mandatory")
+    @NotBlank(message = "The budget name is mandatory")
+    @NotNull(message = "The budget name is mandatory")
     @Column(name = "BDGT_NAME")
     private String name;
 
+    @NotNull(message = "The budget amount is mandatory")
+    @Min(value = 0, message = "The amount cannot be negative")
     @Column(name = "BDGT_AMOUNT")
     private Double amount;
 
@@ -30,9 +40,11 @@ public class Budget implements BumsoftEntity {
     @Column(name = "BDGT_UPDATED_AT")
     private LocalDate updatedAt;
 
+    @NotNull(message = "The user id is mandatory")
     @Column(name = "BDGT_USER_ID")
     private Long userId;
 
+    @NotNull(message = "The account is mandatory for the budget")
     @Column(name = "BDGT_ACC_ID")
     private Long accountId;
 

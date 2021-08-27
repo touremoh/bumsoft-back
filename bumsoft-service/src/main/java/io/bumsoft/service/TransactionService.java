@@ -24,15 +24,18 @@ public class TransactionService extends AbstractBumsoftService<Transaction, Tran
     private final TransactionRepository repository;
     private final ReferenceEntityTypeService referenceEntityTypeService;
     private final ReferenceEntityTypeMapper referenceMapper;
-    private final TransactionMapper mapper;
 
     @Autowired
-    public TransactionService(TransactionRepository repository, ReferenceEntityTypeService referenceEntityTypeService, ReferenceEntityTypeMapper referenceMapper, TransactionMapper mapper) {
-        super(repository, mapper);
+    public TransactionService(
+            TransactionRepository repository,
+            ReferenceEntityTypeService referenceEntityTypeService,
+            ReferenceEntityTypeMapper referenceMapper,
+            TransactionMapper mapper,
+            ValidationService<Transaction> validationService) {
+        super(repository, mapper, validationService);
         this.repository = repository;
         this.referenceEntityTypeService = referenceEntityTypeService;
         this.referenceMapper = referenceMapper;
-        this.mapper = mapper;
     }
 
     /**
@@ -94,7 +97,8 @@ public class TransactionService extends AbstractBumsoftService<Transaction, Tran
      */
     @Override
     void processAfterUpdate(Long id, Transaction entity) throws BumsoftException {
-        if (!id.equals(entity.getId()))
+        if (!id.equals(entity.getId())) {
             throw new BumsoftException("Failed to update resource");
+        }
     }
 }
