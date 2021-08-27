@@ -21,7 +21,7 @@ public class AutomatedPlanController extends AbstractBumsoftController<Automated
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity findByUserId(@RequestParam Long userId) {
+    public ResponseEntity findAllByUserId(@RequestParam Long userId) {
         return ApiResponse.ofRead(service.findByUserId(userId));
     }
 }
