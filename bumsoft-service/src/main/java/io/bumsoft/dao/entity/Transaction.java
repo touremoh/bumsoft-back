@@ -9,7 +9,7 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @Entity
-@Table(name = "TRANSACTION")
+@Table(name = "TRANSACTION", schema = "bumsoftdb")
 public class Transaction implements BumsoftEntity {
     @Id
     @Column(name = "TRX_ID")

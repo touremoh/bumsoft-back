@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.Optional;
 
+import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
 @Slf4j
@@ -59,17 +60,13 @@ public abstract class AbstractBumsoftService<E extends BumsoftEntity, D extends 
     }
 
     public void applyInitialCheckBeforeCreate(E entity) throws BumsoftException {
+        // Validate object fields
+        checkIfInputIsValid(entity);
+
         // Checking if the ID is null
         if (nonNull(entity.getId())) {
             log.error("The id "+entity.getId()+" is not allowed here");
             throw new BumsoftException("ID not allowed - The id should be null for create Operation");
-        }
-
-        // Validate object fields
-        if (validationService.notValid(entity)) {
-            final String message = validationService.getValidationErrorMessage(entity);
-            log.error("Invalid input - Error message is: " + message);
-            throw new BumsoftException(message);
         }
     }
 
@@ -111,27 +108,46 @@ public abstract class AbstractBumsoftService<E extends BumsoftEntity, D extends 
     @Override
     public Either<BumsoftException, D> update(ID id, D dto) {
         try {
-            log.info("Starting update process");
-            if (!repository.existsById(id))
-                throw new BumsoftException("Trying to update a row with an invalid ID: " + id);
-
             // Map the DTO with an Entity
             E entity = mapper.toEntity(dto);
 
-            log.info("Process before update");
+            // Initial check before update
+            this.applyInitialCheckBeforeUpdate(id);
+
+            // Process before update
             this.processBeforeUpdate(id, entity);
 
-            log.info("Persisting the object");
+            // Persisting the object
             E result = this.repository.save(entity);
 
-            log.info("Process after update");
+            // Process after update
             this.processAfterUpdate(id, result);
 
-            log.info("Object successfully updated");
+            // map and return results
             return Either.right(mapper.toDto(result));
         } catch (BumsoftException e) {
             log.debug("An error occurred while trying to update the object");
             return Either.left(e);
+        }
+    }
+
+    /**
+     * Apply initial check before update
+     * @param id
+     * @param entity
+     * @throws BumsoftException
+     */
+    public void applyInitialCheckBeforeUpdate(ID id) throws BumsoftException {
+        log.info("Initial check before persist");
+        // Check if ID is null
+        if (isNull(id)) {
+            log.error("Invalid data: trying to update a resource with null id");
+            throw new BumsoftException("Unable to update with null ID ");
+        }
+        // Check if object exists
+        if (!this.repository.existsById(id)) {
+            log.error("Invalid data: trying to update a resource that does not exists: " + id);
+            throw new BumsoftException("Unable to update resource with invalid ID: " + id);
         }
     }
 
@@ -159,5 +175,19 @@ public abstract class AbstractBumsoftService<E extends BumsoftEntity, D extends 
         log.info("Deleting object with ID: " + id);
         this.repository.deleteById(id);
         log.info("Object deleted");
+    }
+
+    /**
+     * Check if the form is valid
+     * @param entity
+     * @throws BumsoftException
+     */
+    public void checkIfInputIsValid(E entity) throws BumsoftException {
+        // Validate input
+        if (validationService.notValid(entity)) {
+            final String message = validationService.getValidationErrorMessage(entity);
+            log.error("Invalid input - Error message is: " + message);
+            throw new BumsoftException(message);
+        }
     }
 }

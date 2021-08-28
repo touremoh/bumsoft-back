@@ -14,7 +14,7 @@ import java.util.List;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "CREDIT_CARD_INFO")
+@Table(name = "CREDIT_CARD_INFO", schema = "bumsoftdb")
 public class CreditCardInfo implements BumsoftEntity {
     @Id
     @Column(name = "CC_ID")

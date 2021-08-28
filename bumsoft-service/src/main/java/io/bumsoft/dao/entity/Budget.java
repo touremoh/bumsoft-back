@@ -14,7 +14,7 @@ import java.time.LocalDate;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "BUDGET")
+@Table(name = "BUDGET", schema = "bumsoftdb")
 public class Budget implements BumsoftEntity {
     @Id
     @Column(name = "BDGT_ID")

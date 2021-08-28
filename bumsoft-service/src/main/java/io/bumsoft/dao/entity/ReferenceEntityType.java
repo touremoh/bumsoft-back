@@ -12,7 +12,7 @@ import javax.persistence.*;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "REFERENCE_ENTITY_TYPE")
+@Table(name = "REFERENCE_ENTITY_TYPE", schema = "bumsoftdb")
 public class ReferenceEntityType implements BumsoftEntity {
     @Id
     @Column(name = "REF_TYP_ID")

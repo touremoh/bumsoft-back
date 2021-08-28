@@ -13,7 +13,7 @@ import java.time.LocalDate;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "PAYMENT_INFO")
+@Table(name = "PAYMENT_INFO", schema = "bumsoftdb")
 public class PaymentInfo implements BumsoftEntity {
     @Id
     @Column(name = "PI_ID")

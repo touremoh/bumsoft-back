@@ -13,7 +13,7 @@ import java.util.List;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "OPERATION")
+@Table(name = "OPERATION", schema = "bumsoftdb")
 public class Operation implements BumsoftEntity {
     @Id
     @Column(name = "OP_ID")

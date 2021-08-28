@@ -14,6 +14,9 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static java.util.Objects.isNull;
+import static org.mapstruct.ap.internal.util.Strings.isEmpty;
+
 @Slf4j
 @Service
 public class BudgetService extends AbstractBumsoftService<Budget, BudgetDto, BudgetMapper, Long, BudgetRepository> {
@@ -42,6 +45,8 @@ public class BudgetService extends AbstractBumsoftService<Budget, BudgetDto, Bud
     @Override
     void processBeforeCreate(Budget entity) throws BumsoftException {
         log.info("Budget Creation Before Update");
+        // Check if the user exists
+        // Check if account exists
         entity.setCreatedAt(LocalDate.now());
     }
 
@@ -70,7 +75,24 @@ public class BudgetService extends AbstractBumsoftService<Budget, BudgetDto, Bud
      */
     @Override
     void processBeforeUpdate(Long id, Budget entity) throws BumsoftException {
-
+        this.repository.findById(id).ifPresent(budget -> {
+            if (isEmpty(entity.getName())) {
+                entity.setName(budget.getName());
+            }
+            if (isNull(entity.getAmount())) {
+                entity.setAmount(budget.getAmount());
+            }
+            if (isNull(entity.getUserId())) {
+                entity.setUserId(budget.getUserId());
+            }
+            if (isNull(entity.getAccountId())) {
+                entity.setAccountId(budget.getAccountId());
+            }
+            entity.setId(budget.getId());
+            entity.setCreatedAt(budget.getCreatedAt());
+            entity.setUpdatedAt(LocalDate.now());
+        });
+        checkIfInputIsValid(entity);
     }
 
     /**
@@ -82,6 +104,10 @@ public class BudgetService extends AbstractBumsoftService<Budget, BudgetDto, Bud
      */
     @Override
     void processAfterUpdate(Long id, Budget entity) throws BumsoftException {
-
+        log.info("Process after update");
+        if (!id.equals(entity.getId())) {
+            log.error("Update budget failed");
+            throw new BumsoftException("The budget with ID [" + id + "] was not updated ");
+        }
     }
 }

@@ -10,7 +10,7 @@ import java.time.LocalDate;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "AUTOMATED_PLAN")
+@Table(name = "AUTOMATED_PLAN", schema = "bumsoftdb")
 public class AutomatedPlan implements BumsoftEntity {
 
     @Id

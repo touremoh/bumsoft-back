@@ -15,7 +15,7 @@ import java.util.List;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "SUBSCRIPTION")
+@Table(name = "SUBSCRIPTION", schema = "bumsoftdb")
 public class Subscription implements BumsoftEntity {
     @Id
     @Column(name = "SUBS_ID")

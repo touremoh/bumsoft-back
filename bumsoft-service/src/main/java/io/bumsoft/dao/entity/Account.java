@@ -14,7 +14,7 @@ import java.util.List;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "ACCOUNT")
+@Table(name = "ACCOUNT", schema = "bumsoftdb")
 public class Account implements BumsoftEntity {
 
     @Id

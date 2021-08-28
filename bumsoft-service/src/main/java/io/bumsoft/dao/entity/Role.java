@@ -13,7 +13,7 @@ import java.util.List;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "ROLE")
+@Table(name = "ROLE", schema = "bumsoftdb")
 public class Role implements BumsoftEntity {
     @Id
     @Column(name = "ROLE_ID")
