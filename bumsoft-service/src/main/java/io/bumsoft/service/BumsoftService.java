@@ -19,7 +19,7 @@ public interface BumsoftService<D extends BumsoftDto, ID> {
      * @param id of the element to be found
      * @return the dto
      */
-    Either<BumsoftException, D> read(ID id);
+    Either<BumsoftException, D> find(ID id);
 
     /**
      * Update an element in the table represented by the entity E
@@ -33,5 +33,5 @@ public interface BumsoftService<D extends BumsoftDto, ID> {
      * Delete the element from the table
      * @param id of the element to be deleted
      */
-    void delete(ID id);
+    Either<BumsoftException, Boolean> delete(ID id);
 }

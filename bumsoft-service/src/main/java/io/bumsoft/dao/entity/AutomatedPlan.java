@@ -3,6 +3,8 @@ package io.bumsoft.dao.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 @Getter
@@ -19,6 +21,8 @@ public class AutomatedPlan implements BumsoftEntity {
     @SequenceGenerator(name = "automated_plan_sequence", sequenceName = "AUTOMATED_PLAN_SEQ", allocationSize = 1)
     private Long id;
 
+    @NotNull(message = "The threshold is mandatory")
+    @Min(value = 0, message = "Negative amount not allowed")
     @Column(name = "AUP_THRESHOLD")
     private Double threshold;
 
@@ -31,9 +35,11 @@ public class AutomatedPlan implements BumsoftEntity {
     @Column(name = "AUP_UPDATED_AT")
     private LocalDate updatedAt;
 
+    @NotNull(message = "The user is mandatory")
     @Column(name = "AUP_USER_ID")
     private Long userId;
 
+    @NotNull(message = "The account is mandatory")
     @Column(name = "AUP_ACC_ID")
     private Long accountId;
 

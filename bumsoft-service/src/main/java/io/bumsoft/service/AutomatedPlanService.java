@@ -10,8 +10,11 @@ import io.vavr.control.Either;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static java.util.Objects.isNull;
 
 @Slf4j
 @Service
@@ -40,7 +43,8 @@ public class AutomatedPlanService extends AbstractBumsoftService<AutomatedPlan, 
      */
     @Override
     void processBeforeCreate(AutomatedPlan entity) throws BumsoftException {
-
+        log.info("Automated plan service before create");
+        entity.setCreatedAt(LocalDate.now());
     }
 
     /**
@@ -51,7 +55,10 @@ public class AutomatedPlanService extends AbstractBumsoftService<AutomatedPlan, 
      */
     @Override
     void processAfterCreate(AutomatedPlan entity) throws BumsoftException {
-
+        if (!this.repository.existsById(entity.getId())) {
+            log.error("Unable to create automated plan");
+            throw new BumsoftException("The automated plan creation failed");
+        }
     }
 
     /**
@@ -62,19 +69,40 @@ public class AutomatedPlanService extends AbstractBumsoftService<AutomatedPlan, 
      * @throws BumsoftException
      */
     @Override
-    void processBeforeUpdate(Long aLong, AutomatedPlan entity) throws BumsoftException {
-
+    void processBeforeUpdate(Long id, AutomatedPlan entity) throws BumsoftException {
+        log.info("Process before automated plan update");
+        this.repository.findById(id).ifPresent(aup -> {
+            if (isNull(entity.getThreshold())) {
+                entity.setThreshold(aup.getThreshold());
+            }
+            if (isNull(entity.getIsActive())) {
+                entity.setIsActive(aup.getIsActive());
+            }
+            if (isNull(entity.getUserId())) {
+                entity.setUserId(aup.getUserId());
+            }
+            if (isNull(entity.getAccount())) {
+                entity.setAccountId(aup.getAccountId());
+            }
+            entity.setId(aup.getId());
+            entity.setCreatedAt(aup.getCreatedAt());
+            entity.setUpdatedAt(LocalDate.now());
+        });
     }
 
     /**
      * Additional process after update
      *
-     * @param aLong
+     * @param id
      * @param entity
      * @throws BumsoftException
      */
     @Override
-    void processAfterUpdate(Long aLong, AutomatedPlan entity) throws BumsoftException {
-
+    void processAfterUpdate(Long id, AutomatedPlan entity) throws BumsoftException {
+        log.info("Process after AUP update");
+        if (!id.equals(entity.getId())) {
+            log.error("AUP update failed");
+            throw new BumsoftException("Automated plan update failed");
+        }
     }
 }

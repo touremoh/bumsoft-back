@@ -92,7 +92,7 @@ public abstract class AbstractBumsoftService<E extends BumsoftEntity, D extends 
      * @return the entity
      */
     @Override
-    public Either<BumsoftException, D> read(ID id) {
+    public Either<BumsoftException, D> find(ID id) {
         Optional<E> option = this.repository.findById(id);
         return option.<Either<BumsoftException, D>>map(e -> Either.right(mapper.toDto(e)))
                      .orElseGet(() -> Either.left(new BumsoftException("Unable to find object with ID: " + id)));
@@ -171,10 +171,21 @@ public abstract class AbstractBumsoftService<E extends BumsoftEntity, D extends 
      * @param id of the element to be deleted
      */
     @Override
-    public void delete(ID id) {
+    public Either<BumsoftException, Boolean> delete(ID id) {
         log.info("Deleting object with ID: " + id);
+        if (!this.repository.existsById(id)) {
+            log.error("Trying to delete an object with an invalid ID");
+            return Either.left(new BumsoftException("The id of the object to delete is invalid ["+id+"]"));
+        }
+
         this.repository.deleteById(id);
-        log.info("Object deleted");
+
+        if (!this.repository.existsById(id)) {
+            log.info("Object with id "+id+" has been successfully deleted");
+            return Either.right(Boolean.TRUE);
+        }
+        log.warn("Object with id "+id+" failed to be deleted");
+        return Either.right(Boolean.FALSE);
     }
 
     /**

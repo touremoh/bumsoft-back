@@ -19,7 +19,7 @@ public abstract class AbstractBumsoftController<D extends BumsoftDto, ID, S exte
 
     @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity findById(@PathVariable ID id) {
-        return ApiResponse.ofRead(service.read(id));
+        return ApiResponse.ofRead(service.find(id));
     }
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
@@ -32,9 +32,8 @@ public abstract class AbstractBumsoftController<D extends BumsoftDto, ID, S exte
         return ApiResponse.ofUpdate(service.update(id, myDto));
     }
 
-    @DeleteMapping(path="/{id}")
+    @DeleteMapping(path="/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity delete(@PathVariable ID id) {
-        this.service.delete(id);
-        return ApiResponse.ofDelete();
+        return ApiResponse.ofDelete(this.service.delete(id));
     }
 }

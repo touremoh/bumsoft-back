@@ -147,7 +147,7 @@ public class AccountService extends AbstractBumsoftService<Account, AccountDto, 
     }
 
     public Either<BumsoftException, BumsoftResponse> findAccountBalance(final Long accountId) {
-        Either<BumsoftException, AccountDto>  response = read(accountId);
+        Either<BumsoftException, AccountDto>  response = find(accountId);
         if (response.isRight()) {
             AccountDto account = response.get();
             Double accountBalance = account.getTransactions().stream().mapToDouble(TransactionDto::getValue).sum();

@@ -26,8 +26,10 @@ public class ApiResponse<D extends BumsoftDto> {
                 ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(option.getLeft().getMessage());
     }
 
-    public static <D> ResponseEntity ofDelete() {
-        return ResponseEntity.noContent().build();
+    public static <D> ResponseEntity ofDelete(Either<BumsoftException, D> option) {
+        return option.isRight() ?
+                ResponseEntity.status(HttpStatus.NO_CONTENT).body(option.get()) :
+                ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(option.getLeft().getMessage());
     }
 
     public static <D> ResponseEntity of(Either<BumsoftException, D> option) {
