@@ -17,13 +17,13 @@ import java.util.Set;
 public class ValidationService <E extends BumsoftEntity> {
     private final Validator validator;
 
-    public Either<List<String>, Boolean> validate(E entity) {
+    public Either<String, Boolean> validate(E entity) {
         Set<ConstraintViolation<E>> violations = validator.validate(entity);
         if (!violations.isEmpty()) {
             List<String> errors = violations.stream()
                     .map(v -> v.getPropertyPath().toString().concat(":").concat(v.getMessage()))
                     .toList();
-            return Either.left(errors);
+            return Either.left(errors.toString());
         }
         return Either.right(Boolean.FALSE);
     }
