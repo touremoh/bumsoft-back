@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
@@ -29,6 +30,7 @@ public class AccountService extends AbstractBumsoftService<Account, AccountDto, 
     private final ReferenceEntityTypeService referenceService;
     private final ReferenceEntityTypeMapper referenceMapper;
     private final AccountNumberGenerator anGenerator;
+    private final AccountMapper mapper;
 
     @Autowired
     public AccountService(
@@ -43,6 +45,7 @@ public class AccountService extends AbstractBumsoftService<Account, AccountDto, 
         this.referenceService = referenceService;
         this.referenceMapper = referenceMapper;
         this.anGenerator = anGenerator;
+        this.mapper = mapper;
     }
 
     /**
@@ -127,6 +130,11 @@ public class AccountService extends AbstractBumsoftService<Account, AccountDto, 
         log.info("Account successfully updated!");
     }
 
+    /**
+     * Find account balance
+     * @param accountId
+     * @return
+     */
     public Either<BumsoftException, BumsoftResponse> findAccountBalance(final Long accountId) {
         Either<BumsoftException, AccountDto>  response = find(accountId);
         if (response.isRight()) {
@@ -135,5 +143,14 @@ public class AccountService extends AbstractBumsoftService<Account, AccountDto, 
             return Either.right(AccountSnapshot.builder().accountBalance(accountBalance).accountInfo(account).build());
         }
         return Either.left(response.getLeft());
+    }
+
+    public Either<BumsoftException, List<AccountDto>> findAllByUserId(Long userId) {
+        List<Account> accounts = this.repository.findByUserId(userId);
+        if (accounts.isEmpty()) {
+            log.warn("No account found");
+            return Either.left(new BumsoftException("No account found"));
+        }
+        return Either.right(accounts.stream().map(mapper::toDto).toList());
     }
 }

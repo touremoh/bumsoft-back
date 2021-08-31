@@ -7,10 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
@@ -28,5 +25,10 @@ public class AccountController extends AbstractBumsoftController<AccountDto, Lon
     @GetMapping(path = "/{accountId}/balance", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity findAccountBalance(@PathVariable Long accountId) {
         return ApiResponse.ofRead(accountService.findAccountBalance(accountId));
+    }
+
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity findAllByUserId(@RequestParam Long userId) {
+        return ApiResponse.ofRead(accountService.findAllByUserId(userId));
     }
 }
