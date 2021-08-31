@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -26,12 +27,14 @@ public class Account implements BumsoftEntity {
     @Column(name = "ACC_NUM")
     private String accountNumber;
 
+    @NotNull(message = "The account name is mandatory")
     @Column(name = "ACC_NAME")
     private String name;
 
     @Column(name = "ACC_DESC")
     private String description;
 
+    @NotNull(message = "The user id is mandatory")
     @Column(name = "ACC_BS_USR_ID")
     private Long userId;
 

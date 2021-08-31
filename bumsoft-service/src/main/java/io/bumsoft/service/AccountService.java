@@ -28,7 +28,7 @@ public class AccountService extends AbstractBumsoftService<Account, AccountDto, 
     private final AccountRepository repository;
     private final ReferenceEntityTypeService referenceService;
     private final ReferenceEntityTypeMapper referenceMapper;
-    private final AccountNumberGenerator accountNumberGenerator;
+    private final AccountNumberGenerator anGenerator;
 
     @Autowired
     public AccountService(
@@ -36,13 +36,13 @@ public class AccountService extends AbstractBumsoftService<Account, AccountDto, 
             AccountMapper mapper,
             ReferenceEntityTypeService referenceService,
             ReferenceEntityTypeMapper referenceMapper,
-            AccountNumberGenerator accountNumberGenerator,
+            AccountNumberGenerator anGenerator,
             ValidationService<Account> validationService) {
         super(repository, mapper, validationService);
         this.repository = repository;
         this.referenceService = referenceService;
         this.referenceMapper = referenceMapper;
-        this.accountNumberGenerator = accountNumberGenerator;
+        this.anGenerator = anGenerator;
     }
 
     /**
@@ -54,37 +54,18 @@ public class AccountService extends AbstractBumsoftService<Account, AccountDto, 
     @Override
     void processBeforeCreate(Account entity) throws BumsoftException {
         log.info("Account creation process before create");
-        if (nonNull(entity.getId())) {
-            log.error("Account creation failed - The account id must be null for a create operation");
-            throw new BumsoftException("The ID must be null for a create operation");
-        }
         if (nonNull(entity.getAccountNumber())) {
-            log.error("Account creation failed - account number provided");
-            throw new BumsoftException("The account number must be null for a create operation");
+            log.error("Account creation failed - Unauthorized value found - ACCOUNT NUMBER: "+entity.getAccountNumber());
+            throw new BumsoftException("[accountNumber:The account number is not authorized]");
         }
-
-        if (isNull(entity.getUserId())) {
-            log.error("Account creation failed - The user ID is missing");
-            throw new BumsoftException("The user id is mandatory");
-        }
-
-        if (Strings.isEmpty(entity.getName())) {
-            log.error("Account creation failed - The account name is mandatory");
-            throw new BumsoftException("The account name is mandatory");
-        }
-
-        // Set account number
-        entity.setAccountNumber(accountNumberGenerator.generateUniqueAccountNumber(entity.getAccountType().getName(), 7));
-
-        // Set creation date
-        entity.setCreatedAt(LocalDate.now());
-
         // Set account type
-        Either<BumsoftException, ReferenceEntityTypeDto> ref = referenceService.findByName(entity.getAccountType().getName());
-        if (ref.isLeft()) {
-            throw ref.getLeft();
+        Either<BumsoftException, ReferenceEntityTypeDto> res = referenceService.findByName(entity.getAccountType().getName());
+        if (res.isLeft()) {
+            throw new BumsoftException(res.getLeft());
         }
-        entity.setAccountType(referenceMapper.toEntity(ref.get()));
+        entity.setAccountNumber(anGenerator.generateUniqueAccountNumber(entity.getAccountType().getName(), 7));
+        entity.setAccountType(referenceMapper.toEntity(res.get()));
+        entity.setCreatedAt(LocalDate.now());
     }
 
     /**
@@ -111,21 +92,21 @@ public class AccountService extends AbstractBumsoftService<Account, AccountDto, 
     @Override
     void processBeforeUpdate(Long id, Account entity) throws BumsoftException {
         log.info("Account creation process before update");
-
         this.repository.findById(id).ifPresent(account -> {
-            if (Strings.isEmpty(entity.getAccountNumber())) {
-                entity.setAccountNumber(account.getAccountNumber());
-            }
             if (Strings.isEmpty(entity.getName())) {
                 entity.setName(account.getName());
             }
             if (Strings.isEmpty(entity.getDescription())) {
                 entity.setDescription(account.getDescription());
             }
+            if (isNull(account.getUserId())) {
+                entity.setUserId(account.getUserId());
+            }
             entity.setId(account.getId());
-            entity.setUserId(account.getUserId());
+            entity.setAccountNumber(account.getAccountNumber());
             entity.setAccountType(account.getAccountType());
             entity.setCreatedAt(account.getCreatedAt());
+            entity.setTransactions(account.getTransactions());
             entity.setUpdatedAt(LocalDate.now());
         });
     }
@@ -151,13 +132,7 @@ public class AccountService extends AbstractBumsoftService<Account, AccountDto, 
         if (response.isRight()) {
             AccountDto account = response.get();
             Double accountBalance = account.getTransactions().stream().mapToDouble(TransactionDto::getValue).sum();
-            AccountSnapshot accountSnapshot =
-                    AccountSnapshot
-                            .builder()
-                                .accountBalance(accountBalance)
-                                .accountInfo(account)
-                            .build();
-            return Either.right(accountSnapshot);
+            return Either.right(AccountSnapshot.builder().accountBalance(accountBalance).accountInfo(account).build());
         }
         return Either.left(response.getLeft());
     }
