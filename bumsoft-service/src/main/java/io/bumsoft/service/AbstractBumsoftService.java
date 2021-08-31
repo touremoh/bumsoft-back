@@ -8,6 +8,7 @@ import io.bumsoft.mapper.AbstractObjectsMapper;
 import io.vavr.control.Either;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.List;
 import java.util.Optional;
 
 import static java.util.Objects.isNull;
@@ -195,10 +196,11 @@ public abstract class AbstractBumsoftService<E extends BumsoftEntity, D extends 
      */
     public void checkIfInputIsValid(E entity) throws BumsoftException {
         // Validate input
-        if (validationService.notValid(entity)) {
-            final String message = validationService.getValidationErrorMessage(entity);
-            log.error("Invalid input - Error message is: " + message);
-            throw new BumsoftException(message);
+        Either<List<String>, Boolean> results = this.validationService.validate(entity);
+        if (results.isLeft()) {
+            final List<String> errors = results.getLeft();
+            log.error("Invalid input - Error message is: " + errors);
+            throw new BumsoftException(errors);
         }
     }
 }

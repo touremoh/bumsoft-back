@@ -46,11 +46,12 @@ public class TransactionService extends AbstractBumsoftService<Transaction, Tran
      */
     @Override
     void processBeforeCreate(Transaction entity) throws BumsoftException {
-        entity.setProcessingDate(LocalDate.now());
-        Either<BumsoftException, ReferenceEntityTypeDto> ref = referenceEntityTypeService.findByName(entity.getTransactionType().getName());
+        Either<BumsoftException, ReferenceEntityTypeDto> ref =
+                referenceEntityTypeService.findByName(entity.getTransactionType().getName());
         if (ref.isLeft()) {
             throw ref.getLeft();
         }
+        entity.setProcessingDate(LocalDate.now());
         entity.setTransactionType(referenceMapper.toEntity(ref.get()));
     }
 
@@ -74,9 +75,6 @@ public class TransactionService extends AbstractBumsoftService<Transaction, Tran
     @Override
     void processBeforeUpdate(Long id, Transaction entity) throws BumsoftException {
         this.repository.findById(id).ifPresent(transaction -> {
-            entity.setId(transaction.getId());
-            entity.setTransactionType(transaction.getTransactionType());
-
             if (isNull(entity.getValue())) {
                 entity.setValue(transaction.getValue());
             }
@@ -86,19 +84,24 @@ public class TransactionService extends AbstractBumsoftService<Transaction, Tran
             if (isNull(entity.getProcessingDate())) {
                 entity.setProcessingDate(transaction.getProcessingDate());
             }
+            entity.setId(transaction.getId());
+            entity.setTransactionType(transaction.getTransactionType());
         });
     }
 
     /**
      * Additional process after update
-     *
      * @param entity
      * @throws BumsoftException
      */
     @Override
     void processAfterUpdate(Long id, Transaction entity) throws BumsoftException {
         if (!id.equals(entity.getId())) {
+            log.error("Failed");
             throw new BumsoftException("Failed to update resource");
         }
+        // Check if transacted account is configured to AUP
+        // Yes ? => check if the threshold is read
+        // Yes ? => Dispatch budgets
     }
 }
