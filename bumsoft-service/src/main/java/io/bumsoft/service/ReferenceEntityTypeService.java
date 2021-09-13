@@ -26,59 +26,10 @@ public class ReferenceEntityTypeService extends AbstractBumsoftService<Reference
         this.mapper = mapper;
     }
 
-    /**
-     * Additional process before persisting the entity
-     *
-     * @param entity
-     * @throws BumsoftException
-     */
-    @Override
-    void processBeforeCreate(ReferenceEntityType entity) throws BumsoftException {
-
-    }
-
-    /**
-     * Additional process after the object has been persisted
-     *
-     * @param entity
-     * @throws BumsoftException
-     */
-    @Override
-    void processAfterCreate(ReferenceEntityType entity) throws BumsoftException {
-
-    }
-
-    /**
-     * Additional process before update
-     *
-     * @param aLong
-     * @param entity
-     * @throws BumsoftException
-     */
-    @Override
-    void processBeforeUpdate(Long aLong, ReferenceEntityType entity) throws BumsoftException {
-
-    }
-
-    /**
-     * Additional process after update
-     *
-     * @param aLong
-     * @param entity
-     * @throws BumsoftException
-     */
-    @Override
-    void processAfterUpdate(Long aLong, ReferenceEntityType entity) throws BumsoftException {
-
-    }
-
-
     public Either<BumsoftException, ReferenceEntityTypeDto> findByName(final String name) {
         return ofNullable(this.repository.findByName(name))
                 .<Either<BumsoftException, ReferenceEntityTypeDto>>map(e -> Either.right(mapper.toDto(e)))
                 .orElseGet(() -> Either.left(new BumsoftException("No reference found for name: " + name)));
 
     }
-
-
 }

@@ -75,14 +75,18 @@ public abstract class AbstractBumsoftService<E extends BumsoftEntity, D extends 
      * @param entity
      * @throws BumsoftException
      */
-    abstract void processBeforeCreate(E entity) throws BumsoftException;
+    public void processBeforeCreate(E entity) throws BumsoftException {
+        log.info("Process before create ");
+    }
 
     /**
      * Additional process after the object has been persisted
      * @param entity
      * @throws BumsoftException
      */
-    abstract void processAfterCreate(E entity) throws BumsoftException;
+    public void processAfterCreate(E entity) throws BumsoftException {
+        log.info("Process after create ");
+    }
 
 
     /**
@@ -134,7 +138,6 @@ public abstract class AbstractBumsoftService<E extends BumsoftEntity, D extends 
     /**
      * Apply initial check before update
      * @param id
-     * @param entity
      * @throws BumsoftException
      */
     public void applyInitialCheckBeforeUpdate(ID id) throws BumsoftException {
@@ -156,14 +159,18 @@ public abstract class AbstractBumsoftService<E extends BumsoftEntity, D extends 
      * @param entity
      * @throws BumsoftException
      */
-    abstract void processBeforeUpdate(ID id, E entity) throws BumsoftException;
+    public void processBeforeUpdate(ID id, E entity) throws BumsoftException {
+        log.info("Process before update");
+    }
 
     /**
      * Additional process after update
      * @param entity
      * @throws BumsoftException
      */
-    abstract void processAfterUpdate(ID id, E entity) throws BumsoftException;
+    public void processAfterUpdate(ID id, E entity) throws BumsoftException {
+        log.info("Process after update");
+    }
 
     /**
      * Delete the element from the table

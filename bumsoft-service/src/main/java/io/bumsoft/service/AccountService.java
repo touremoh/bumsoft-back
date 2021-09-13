@@ -55,7 +55,7 @@ public class AccountService extends AbstractBumsoftService<Account, AccountDto, 
      * @throws BumsoftException
      */
     @Override
-    void processBeforeCreate(Account entity) throws BumsoftException {
+    public void processBeforeCreate(Account entity) throws BumsoftException {
         log.info("Account creation process before create");
         if (nonNull(entity.getAccountNumber())) {
             log.error("Account creation failed - Unauthorized value found - ACCOUNT NUMBER: "+entity.getAccountNumber());
@@ -78,7 +78,7 @@ public class AccountService extends AbstractBumsoftService<Account, AccountDto, 
      * @throws BumsoftException
      */
     @Override
-    void processAfterCreate(Account entity) throws BumsoftException {
+    public void processAfterCreate(Account entity) throws BumsoftException {
         log.info("Account creation process after create");
         if (!this.repository.existsById(entity.getId())) {
             log.error("Account creation failed!");
@@ -93,7 +93,7 @@ public class AccountService extends AbstractBumsoftService<Account, AccountDto, 
      * @throws BumsoftException
      */
     @Override
-    void processBeforeUpdate(Long id, Account entity) throws BumsoftException {
+    public void processBeforeUpdate(Long id, Account entity) throws BumsoftException {
         log.info("Account creation process before update");
         this.repository.findById(id).ifPresent(account -> {
             if (Strings.isEmpty(entity.getName())) {
@@ -121,7 +121,7 @@ public class AccountService extends AbstractBumsoftService<Account, AccountDto, 
      * @throws BumsoftException
      */
     @Override
-    void processAfterUpdate(Long id, Account entity) throws BumsoftException {
+    public void processAfterUpdate(Long id, Account entity) throws BumsoftException {
         log.info("Account update process after save operation");
         if (!id.equals(entity.getId())) {
             log.error("Account update failed!");

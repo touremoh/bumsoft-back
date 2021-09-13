@@ -24,7 +24,7 @@ public class AutomatedPlanService extends AbstractBumsoftService<AutomatedPlan, 
     private final AutomatedPlanMapper mapper;
 
 
-    protected AutomatedPlanService(AutomatedPlanRepository repository, AutomatedPlanMapper mapper, ValidationService<AutomatedPlan> validationService) {
+    public AutomatedPlanService(AutomatedPlanRepository repository, AutomatedPlanMapper mapper, ValidationService<AutomatedPlan> validationService) {
         super(repository, mapper, validationService);
         this.repository = repository;
         this.mapper = mapper;
@@ -42,7 +42,7 @@ public class AutomatedPlanService extends AbstractBumsoftService<AutomatedPlan, 
      * @throws BumsoftException
      */
     @Override
-    void processBeforeCreate(AutomatedPlan entity) throws BumsoftException {
+    public void processBeforeCreate(AutomatedPlan entity) throws BumsoftException {
         log.info("Automated plan service before create");
         entity.setCreatedAt(LocalDate.now());
     }
@@ -54,7 +54,7 @@ public class AutomatedPlanService extends AbstractBumsoftService<AutomatedPlan, 
      * @throws BumsoftException
      */
     @Override
-    void processAfterCreate(AutomatedPlan entity) throws BumsoftException {
+    public void processAfterCreate(AutomatedPlan entity) throws BumsoftException {
         if (!this.repository.existsById(entity.getId())) {
             log.error("Unable to create automated plan");
             throw new BumsoftException("The automated plan creation failed");
@@ -68,7 +68,7 @@ public class AutomatedPlanService extends AbstractBumsoftService<AutomatedPlan, 
      * @throws BumsoftException
      */
     @Override
-    void processBeforeUpdate(Long id, AutomatedPlan entity) throws BumsoftException {
+    public void processBeforeUpdate(Long id, AutomatedPlan entity) throws BumsoftException {
         log.info("Process before automated plan update");
         this.repository.findById(id).ifPresent(aup -> {
             if (isNull(entity.getThreshold())) {
@@ -97,7 +97,7 @@ public class AutomatedPlanService extends AbstractBumsoftService<AutomatedPlan, 
      * @throws BumsoftException
      */
     @Override
-    void processAfterUpdate(Long id, AutomatedPlan entity) throws BumsoftException {
+    public void processAfterUpdate(Long id, AutomatedPlan entity) throws BumsoftException {
         log.info("Process after AUP update");
         if (!id.equals(entity.getId())) {
             log.error("AUP update failed");

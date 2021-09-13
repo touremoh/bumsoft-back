@@ -45,7 +45,7 @@ public class TransactionService extends AbstractBumsoftService<Transaction, Tran
      * @throws BumsoftException
      */
     @Override
-    void processBeforeCreate(Transaction entity) throws BumsoftException {
+    public void processBeforeCreate(Transaction entity) throws BumsoftException {
         Either<BumsoftException, ReferenceEntityTypeDto> ref =
                 referenceEntityTypeService.findByName(entity.getTransactionType().getName());
         if (ref.isLeft()) {
@@ -56,24 +56,13 @@ public class TransactionService extends AbstractBumsoftService<Transaction, Tran
     }
 
     /**
-     * Additional process after the object has been persisted
-     *
-     * @param entity
-     * @throws BumsoftException
-     */
-    @Override
-    void processAfterCreate(Transaction entity) throws BumsoftException {
-
-    }
-
-    /**
      * Additional process before update
      *
      * @param entity
      * @throws BumsoftException
      */
     @Override
-    void processBeforeUpdate(Long id, Transaction entity) throws BumsoftException {
+    public void processBeforeUpdate(Long id, Transaction entity) throws BumsoftException {
         this.repository.findById(id).ifPresent(transaction -> {
             if (isNull(entity.getValue())) {
                 entity.setValue(transaction.getValue());
@@ -95,7 +84,7 @@ public class TransactionService extends AbstractBumsoftService<Transaction, Tran
      * @throws BumsoftException
      */
     @Override
-    void processAfterUpdate(Long id, Transaction entity) throws BumsoftException {
+    public void processAfterUpdate(Long id, Transaction entity) throws BumsoftException {
         if (!id.equals(entity.getId())) {
             log.error("Failed");
             throw new BumsoftException("Failed to update resource");

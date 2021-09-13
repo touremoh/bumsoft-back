@@ -43,7 +43,7 @@ public class BudgetService extends AbstractBumsoftService<Budget, BudgetDto, Bud
      * @throws BumsoftException
      */
     @Override
-    void processBeforeCreate(Budget entity) throws BumsoftException {
+    public void processBeforeCreate(Budget entity) throws BumsoftException {
         log.info("Budget Creation Before Update");
         // Check if the user exists
         // Check if account exists
@@ -57,7 +57,7 @@ public class BudgetService extends AbstractBumsoftService<Budget, BudgetDto, Bud
      * @throws BumsoftException
      */
     @Override
-    void processAfterCreate(Budget entity) throws BumsoftException {
+    public void processAfterCreate(Budget entity) throws BumsoftException {
         log.info("Checking if persistence was ok");
         if (!this.repository.existsById(entity.getId())) {
             log.error("Unable to persist object with ID: " + entity.getId());
@@ -74,7 +74,7 @@ public class BudgetService extends AbstractBumsoftService<Budget, BudgetDto, Bud
      * @throws BumsoftException
      */
     @Override
-    void processBeforeUpdate(Long id, Budget entity) throws BumsoftException {
+    public void processBeforeUpdate(Long id, Budget entity) throws BumsoftException {
         this.repository.findById(id).ifPresent(budget -> {
             if (isEmpty(entity.getName())) {
                 entity.setName(budget.getName());
@@ -103,7 +103,7 @@ public class BudgetService extends AbstractBumsoftService<Budget, BudgetDto, Bud
      * @throws BumsoftException
      */
     @Override
-    void processAfterUpdate(Long id, Budget entity) throws BumsoftException {
+    public void processAfterUpdate(Long id, Budget entity) throws BumsoftException {
         log.info("Process after update");
         if (!id.equals(entity.getId())) {
             log.error("Update budget failed");
