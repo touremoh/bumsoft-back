@@ -63,8 +63,7 @@ public class AutomatedPlanService extends AbstractBumsoftService<AutomatedPlan, 
 
     /**
      * Additional process before update
-     *
-     * @param aLong
+     * @param id
      * @param entity
      * @throws BumsoftException
      */
@@ -104,5 +103,9 @@ public class AutomatedPlanService extends AbstractBumsoftService<AutomatedPlan, 
             log.error("AUP update failed");
             throw new BumsoftException("Automated plan update failed");
         }
+    }
+
+    public boolean isAccountSubjectToAutomaticPlan(Long accountId) {
+        return this.repository.findByAccountIdAndIsActiveIsTrue(accountId).isPresent();
     }
 }
