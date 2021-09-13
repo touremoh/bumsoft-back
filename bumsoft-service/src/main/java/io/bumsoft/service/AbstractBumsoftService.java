@@ -7,7 +7,10 @@ import io.bumsoft.exception.BumsoftException;
 import io.bumsoft.mapper.AbstractObjectsMapper;
 import io.vavr.control.Either;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.jpa.domain.Specification;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static java.util.Objects.isNull;
@@ -208,5 +211,28 @@ public abstract class AbstractBumsoftService<E extends BumsoftEntity, D extends 
             log.error("Invalid input - Error message is: " + errors);
             throw new BumsoftException(errors);
         }
+    }
+
+    /**
+     * Find a list of objects by criteria
+     * @param criteria
+     * @return List of DTO
+     */
+    @Override
+    public Either<BumsoftException, List<D>> findByCriteria(Map<String, String> criteria) {
+        // Build the query to be executed
+        Specification<E> specification = this.createSpecification(criteria);
+
+        // Find all
+        List<E> results = this.repository.findAll(specification);
+
+        if (!results.isEmpty()) {
+            return Either.right(results.stream().map(mapper::toDto).toList());
+        }
+        return Either.left(new BumsoftException("No results found with criteria=" + criteria.toString()));
+    }
+
+    public Specification<E> createSpecification(Map<String, String> criteria) {
+        return Specification.where(null);
     }
 }

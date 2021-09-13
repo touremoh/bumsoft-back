@@ -5,6 +5,9 @@ import io.bumsoft.dto.BumsoftDto;
 import io.bumsoft.exception.BumsoftException;
 import io.vavr.control.Either;
 
+import java.util.List;
+import java.util.Map;
+
 public interface BumsoftService<D extends BumsoftDto, ID> {
 
     /**
@@ -34,4 +37,11 @@ public interface BumsoftService<D extends BumsoftDto, ID> {
      * @param id of the element to be deleted
      */
     Either<BumsoftException, Boolean> delete(ID id);
+
+    /**
+     * Find a list of objects by criteria
+     * @param criteria
+     * @return List of DTO
+     */
+    Either<BumsoftException, List<D>> findByCriteria(Map<String, String> criteria);
 }

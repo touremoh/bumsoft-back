@@ -8,6 +8,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @Slf4j
 public abstract class AbstractBumsoftController<D extends BumsoftDto, ID, S extends BumsoftService<D, ID>> {
 
@@ -36,4 +38,10 @@ public abstract class AbstractBumsoftController<D extends BumsoftDto, ID, S exte
     public ResponseEntity delete(@PathVariable ID id) {
         return ApiResponse.ofDelete(this.service.delete(id));
     }
+
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity findByCriteria(@RequestParam Map<String, String> criteria) {
+        return ApiResponse.ofRead(service.findByCriteria(criteria));
+    }
+
 }

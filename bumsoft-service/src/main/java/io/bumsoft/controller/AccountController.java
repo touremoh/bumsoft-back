@@ -26,9 +26,4 @@ public class AccountController extends AbstractBumsoftController<AccountDto, Lon
     public ResponseEntity findAccountBalance(@PathVariable Long accountId) {
         return ApiResponse.ofRead(accountService.findAccountBalance(accountId));
     }
-
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity findAllByUserId(@RequestParam Long userId) {
-        return ApiResponse.ofRead(accountService.findAllByUserId(userId));
-    }
 }

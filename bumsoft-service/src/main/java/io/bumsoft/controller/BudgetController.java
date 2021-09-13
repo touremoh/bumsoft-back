@@ -1,12 +1,10 @@
 package io.bumsoft.controller;
 
 import io.bumsoft.dto.common.BudgetDto;
-import io.bumsoft.helper.ApiResponse;
 import io.bumsoft.service.BudgetService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
@@ -18,10 +16,5 @@ public class BudgetController  extends AbstractBumsoftController<BudgetDto, Long
     protected BudgetController(BudgetService service) {
         super(service);
         this.service = service;
-    }
-
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity findAllByUserId(@RequestParam Long userId) {
-        return ApiResponse.ofRead(service.findByUserId(userId));
     }
 }
