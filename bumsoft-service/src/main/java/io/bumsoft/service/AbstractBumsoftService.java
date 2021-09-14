@@ -3,6 +3,8 @@ package io.bumsoft.service;
 import io.bumsoft.dao.entity.BumsoftEntity;
 import io.bumsoft.dao.repository.BumsoftRepository;
 import io.bumsoft.dto.BumsoftDto;
+import io.bumsoft.dto.response.ApiResponseCode;
+import io.bumsoft.dto.response.ErrorResponse;
 import io.bumsoft.exception.BumsoftException;
 import io.bumsoft.mapper.AbstractObjectsMapper;
 import io.vavr.control.Either;
@@ -37,7 +39,7 @@ public abstract class AbstractBumsoftService<E extends BumsoftEntity, D extends 
      * @return entity if successfully created
      */
     @Override
-    public Either<BumsoftException, D> create(D dto) {
+    public Either<ErrorResponse, D> create(D dto) {
         try {
             // Map the object to an entity type
             E entity = mapper.toEntity(dto);
@@ -57,8 +59,14 @@ public abstract class AbstractBumsoftService<E extends BumsoftEntity, D extends 
             // Map to a Data Transfer Object type and returns the object
             return Either.right(mapper.toDto(result));
         } catch (BumsoftException e) {
-            log.debug("An error occurred while trying to create the object");
-            return Either.left(e);
+            log.error(e.getMessage());
+            ErrorResponse error =
+                    ErrorResponse
+                            .builder()
+                            .responseCode(ApiResponseCode.CREATION_FAILED)
+                            .errorMessage(e.getMessage())
+                            .build();
+            return Either.left(error);
         }
     }
 
@@ -99,10 +107,15 @@ public abstract class AbstractBumsoftService<E extends BumsoftEntity, D extends 
      * @return the entity
      */
     @Override
-    public Either<BumsoftException, D> find(ID id) {
+    public Either<ErrorResponse, D> find(ID id) {
+        // Error to be returned in case of error
+        ErrorResponse error = ErrorResponse.builder().responseCode(ApiResponseCode.RESOURCE_NOT_FOUND).errorMessage("Invalid ID ["+id+"]").build();
+
+        // Find the resource by its ID
         Optional<E> option = this.repository.findById(id);
-        return option.<Either<BumsoftException, D>>map(e -> Either.right(mapper.toDto(e)))
-                     .orElseGet(() -> Either.left(new BumsoftException("Unable to find object with ID: " + id)));
+
+        // Return the found object or the corresponding error
+        return option.<Either<ErrorResponse, D>>map(e -> Either.right(mapper.toDto(e))).orElseGet(() -> Either.left(error));
     }
 
     /**
@@ -113,7 +126,7 @@ public abstract class AbstractBumsoftService<E extends BumsoftEntity, D extends 
      * @return the updated entity
      */
     @Override
-    public Either<BumsoftException, D> update(ID id, D dto) {
+    public Either<ErrorResponse, D> update(ID id, D dto) {
         try {
             // Map the DTO with an Entity
             E entity = mapper.toEntity(dto);
@@ -133,8 +146,14 @@ public abstract class AbstractBumsoftService<E extends BumsoftEntity, D extends 
             // map and return results
             return Either.right(mapper.toDto(result));
         } catch (BumsoftException e) {
-            log.debug("An error occurred while trying to update the object");
-            return Either.left(e);
+            // Log error message
+            log.error("An error occurred while trying to update the object");
+
+            // Build the error message to be exposed to the client
+            ErrorResponse response = ErrorResponse.builder().responseCode(ApiResponseCode.UPDATE_FAILED).errorMessage(e.getMessage()).build();
+
+            // Return the error to the client
+            return Either.left(response);
         }
     }
 
@@ -181,11 +200,18 @@ public abstract class AbstractBumsoftService<E extends BumsoftEntity, D extends 
      * @param id of the element to be deleted
      */
     @Override
-    public Either<BumsoftException, Boolean> delete(ID id) {
+    public Either<ErrorResponse, Boolean> delete(ID id) {
         log.info("Deleting object with ID: " + id);
+
         if (!this.repository.existsById(id)) {
+            // log error
             log.error("Trying to delete an object with an invalid ID");
-            return Either.left(new BumsoftException("The id of the object to delete is invalid ["+id+"]"));
+
+            // Build error response
+            ErrorResponse response = ErrorResponse.builder().responseCode(ApiResponseCode.INVALID_ID).errorMessage("Invalid object ID ["+id+"]").build();
+
+            // Return error response
+            return Either.left(response);
         }
 
         this.repository.deleteById(id);
@@ -207,8 +233,13 @@ public abstract class AbstractBumsoftService<E extends BumsoftEntity, D extends 
         // Validate input
         Either<String, Boolean> results = this.validationService.validate(entity);
         if (results.isLeft()) {
+            // get validation error message
             final String errors = results.getLeft();
+
+            // add errors to the logs
             log.error("Invalid input - Error message is: " + errors);
+
+            // propagate error
             throw new BumsoftException(errors);
         }
     }
@@ -219,7 +250,7 @@ public abstract class AbstractBumsoftService<E extends BumsoftEntity, D extends 
      * @return List of DTO
      */
     @Override
-    public Either<BumsoftException, List<D>> findByCriteria(Map<String, String> criteria) {
+    public Either<ErrorResponse, List<D>> findByCriteria(Map<String, String> criteria) {
         // Build the query to be executed
         Specification<E> specification = this.createSpecification(criteria);
 
@@ -229,7 +260,17 @@ public abstract class AbstractBumsoftService<E extends BumsoftEntity, D extends 
         if (!results.isEmpty()) {
             return Either.right(results.stream().map(mapper::toDto).toList());
         }
-        return Either.left(new BumsoftException("No results found with criteria=" + criteria.toString()));
+
+        // build error message
+        ErrorResponse response =
+                ErrorResponse
+                        .builder()
+                        .responseCode(ApiResponseCode.RESOURCE_NOT_FOUND)
+                        .errorMessage("No results found with criteria=" + criteria.toString())
+                        .build();
+
+        // return errors to the client
+        return Either.left(response);
     }
 
     public Specification<E> createSpecification(Map<String, String> criteria) {

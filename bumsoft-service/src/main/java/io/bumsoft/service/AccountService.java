@@ -7,6 +7,7 @@ import io.bumsoft.dto.acounts.AccountSnapshot;
 import io.bumsoft.dto.common.AccountDto;
 import io.bumsoft.dto.common.ReferenceEntityTypeDto;
 import io.bumsoft.dto.common.TransactionDto;
+import io.bumsoft.dto.response.ErrorResponse;
 import io.bumsoft.exception.BumsoftException;
 import io.bumsoft.mapper.AccountMapper;
 import io.bumsoft.mapper.ReferenceEntityTypeMapper;
@@ -145,8 +146,8 @@ public class AccountService extends AbstractBumsoftService<Account, AccountDto, 
      * @param accountId
      * @return
      */
-    public Either<BumsoftException, BumsoftResponse> findAccountBalance(final Long accountId) {
-        Either<BumsoftException, AccountDto>  response = find(accountId);
+    public Either<ErrorResponse, BumsoftResponse> findAccountBalance(final Long accountId) {
+        Either<ErrorResponse, AccountDto>  response = find(accountId);
         if (response.isRight()) {
             AccountDto account = response.get();
             Double accountBalance = account.getTransactions().stream().mapToDouble(TransactionDto::getValue).sum();

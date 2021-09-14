@@ -23,7 +23,7 @@ public class AccountController extends AbstractBumsoftController<AccountDto, Lon
     }
 
     @GetMapping(path = "/{accountId}/balance", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity findAccountBalance(@PathVariable Long accountId) {
+    public ResponseEntity<AccountDto> findAccountBalance(@PathVariable Long accountId) {
         return ApiResponse.ofRead(accountService.findAccountBalance(accountId));
     }
 }
