@@ -10,11 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/budgets")
 public class BudgetController  extends AbstractBumsoftController<BudgetDto, Long, BudgetService> {
-
-    private final BudgetService service;
-
     protected BudgetController(BudgetService service) {
         super(service);
-        this.service = service;
     }
 }

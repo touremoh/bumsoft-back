@@ -19,7 +19,7 @@ public class BudgetQueryBuilder implements BumsoftQueryBuilder<Budget> {
     public Specification<Budget> buildQuerySpecifications(Map<String, String> queryCriteria) {
         return Specification
                 .where(like(BDGT_NAME, queryCriteria.get(BDGT_NAME)))
-                .and(compareDouble(BDGT_AMOUNT, queryCriteria.get(BDGT_AMOUNT), BDGT_AMOUNT_CMP))
+                .and(compareDouble(BDGT_AMOUNT, queryCriteria.get(BDGT_AMOUNT), queryCriteria.get(BDGT_AMOUNT_CMP)))
                 .and(expressionEquals(BDGT_USER_ID, queryCriteria.get(BDGT_USER_ID)))
                 .and(expressionEquals(BDGT_ACC_ID, queryCriteria.get(BDGT_ACC_ID)));
     }
