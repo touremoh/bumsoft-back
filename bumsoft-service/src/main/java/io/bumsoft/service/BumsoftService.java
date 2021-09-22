@@ -39,8 +39,15 @@ public interface BumsoftService<D extends BumsoftDto, ID> {
 
     /**
      * Find a list of objects by criteria
-     * @param criteria
+     * @param criteria criteria of the query
      * @return List of DTO
      */
-    Either<ErrorResponse, List<D>> findByCriteria(Map<String, String> criteria);
+    Either<ErrorResponse, List<D>> findAllByCriteria(Map<String, String> criteria);
+
+    /**
+     * Find one element by criteria
+     * @param criteria is the query criteria
+     * @return one element corresponding to the query criteria
+     */
+    Either<ErrorResponse, D> findOneByCriteria(Map<String, String> criteria);
 }

@@ -2,6 +2,7 @@ package io.bumsoft.service;
 
 import io.bumsoft.dao.entity.Transaction;
 import io.bumsoft.dao.repository.TransactionRepository;
+import io.bumsoft.dao.specifications.TransactionQueryBuilder;
 import io.bumsoft.dto.common.ReferenceEntityTypeDto;
 import io.bumsoft.dto.common.TransactionDto;
 import io.bumsoft.exception.BumsoftException;
@@ -19,7 +20,7 @@ import static java.util.Objects.isNull;
 
 @Slf4j
 @Service
-public class TransactionService extends AbstractBumsoftService<Transaction, TransactionDto, TransactionMapper, Long, TransactionRepository> {
+public class TransactionService extends AbstractBumsoftService<Transaction, TransactionDto, Long> {
 
     private final TransactionRepository repository;
     private final ReferenceEntityTypeService referenceEntityTypeService;
@@ -31,8 +32,9 @@ public class TransactionService extends AbstractBumsoftService<Transaction, Tran
             ReferenceEntityTypeService referenceEntityTypeService,
             ReferenceEntityTypeMapper referenceMapper,
             TransactionMapper mapper,
-            ValidationService<Transaction> validationService) {
-        super(repository, mapper, validationService);
+            ValidationService<Transaction> validationService,
+            TransactionQueryBuilder queryBuilder) {
+        super(repository, mapper, validationService, queryBuilder);
         this.repository = repository;
         this.referenceEntityTypeService = referenceEntityTypeService;
         this.referenceMapper = referenceMapper;

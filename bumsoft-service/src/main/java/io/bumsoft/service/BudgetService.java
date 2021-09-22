@@ -2,6 +2,7 @@ package io.bumsoft.service;
 
 import io.bumsoft.dao.entity.Budget;
 import io.bumsoft.dao.repository.BudgetRepository;
+import io.bumsoft.dao.specifications.BudgetQueryBuilder;
 import io.bumsoft.dto.common.BudgetDto;
 import io.bumsoft.exception.BumsoftException;
 import io.bumsoft.mapper.BudgetMapper;
@@ -19,14 +20,18 @@ import static org.mapstruct.ap.internal.util.Strings.isEmpty;
 
 @Slf4j
 @Service
-public class BudgetService extends AbstractBumsoftService<Budget, BudgetDto, BudgetMapper, Long, BudgetRepository> {
+public class BudgetService extends AbstractBumsoftService<Budget, BudgetDto, Long> {
 
     private final BudgetRepository repository;
     private final BudgetMapper mapper;
 
     @Autowired
-    protected BudgetService(BudgetRepository repository, BudgetMapper mapper, ValidationService<Budget> validationService) {
-        super(repository, mapper, validationService);
+    protected BudgetService(
+            BudgetRepository repository,
+            BudgetMapper mapper,
+            ValidationService<Budget> validationService,
+            BudgetQueryBuilder queryBuilder) {
+        super(repository, mapper, validationService, queryBuilder);
         this.mapper = mapper;
         this.repository = repository;
     }

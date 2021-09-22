@@ -2,6 +2,7 @@ package io.bumsoft.service;
 
 import io.bumsoft.dao.entity.ReferenceEntityType;
 import io.bumsoft.dao.repository.ReferenceEntityTypeRepository;
+import io.bumsoft.dao.specifications.ReferenceEntityTypeQueryBuilder;
 import io.bumsoft.dto.common.ReferenceEntityTypeDto;
 import io.bumsoft.exception.BumsoftException;
 import io.bumsoft.mapper.ReferenceEntityTypeMapper;
@@ -14,14 +15,14 @@ import static java.util.Optional.ofNullable;
 
 @Slf4j
 @Service
-public class ReferenceEntityTypeService extends AbstractBumsoftService<ReferenceEntityType, ReferenceEntityTypeDto, ReferenceEntityTypeMapper, Long, ReferenceEntityTypeRepository> {
+public class ReferenceEntityTypeService extends AbstractBumsoftService<ReferenceEntityType, ReferenceEntityTypeDto, Long> {
 
     private final ReferenceEntityTypeRepository repository;
     private final ReferenceEntityTypeMapper mapper;
 
     @Autowired
-    public ReferenceEntityTypeService(ReferenceEntityTypeRepository repository, ReferenceEntityTypeMapper mapper, ValidationService<ReferenceEntityType> validationService) {
-        super(repository, mapper, validationService);
+    public ReferenceEntityTypeService(ReferenceEntityTypeRepository repository, ReferenceEntityTypeMapper mapper, ValidationService<ReferenceEntityType> validationService, ReferenceEntityTypeQueryBuilder queryBuilder) {
+        super(repository, mapper, validationService, queryBuilder);
         this.repository = repository;
         this.mapper = mapper;
     }

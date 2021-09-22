@@ -25,6 +25,6 @@ public class ValidationService <E extends BumsoftEntity> {
                     .toList();
             return Either.left(errors.toString());
         }
-        return Either.right(Boolean.FALSE);
+        return Either.right(Boolean.TRUE);
     }
 }

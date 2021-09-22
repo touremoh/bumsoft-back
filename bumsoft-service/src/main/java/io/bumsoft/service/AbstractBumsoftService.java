@@ -2,6 +2,7 @@ package io.bumsoft.service;
 
 import io.bumsoft.dao.entity.BumsoftEntity;
 import io.bumsoft.dao.repository.BumsoftRepository;
+import io.bumsoft.dao.specifications.BumsoftQueryBuilder;
 import io.bumsoft.dto.BumsoftDto;
 import io.bumsoft.dto.response.ApiResponseCode;
 import io.bumsoft.dto.response.ErrorResponse;
@@ -19,17 +20,18 @@ import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
 @Slf4j
-public abstract class AbstractBumsoftService<E extends BumsoftEntity, D extends BumsoftDto, M extends AbstractObjectsMapper<E, D>, ID, R extends BumsoftRepository<E, ID>>
-                implements BumsoftService<D, ID> {
+public abstract class AbstractBumsoftService<E extends BumsoftEntity, D extends BumsoftDto, ID> implements BumsoftService<D, ID> {
 
-    private final R repository;
-    private final M mapper;
+    private final BumsoftRepository<E, ID> repository;
+    private final AbstractObjectsMapper<E, D> mapper;
     private final ValidationService<E> validationService;
+    private final BumsoftQueryBuilder<E> queryBuilder;
 
-    protected AbstractBumsoftService(R repository, M mapper, ValidationService<E> validationService) {
+    protected AbstractBumsoftService(BumsoftRepository<E, ID> repository, AbstractObjectsMapper<E, D> mapper, ValidationService<E> validationService, BumsoftQueryBuilder<E> queryBuilder) {
         this.repository = repository;
         this.mapper = mapper;
         this.validationService = validationService;
+        this.queryBuilder = queryBuilder;
     }
 
     /**
@@ -250,17 +252,15 @@ public abstract class AbstractBumsoftService<E extends BumsoftEntity, D extends 
      * @return List of DTO
      */
     @Override
-    public Either<ErrorResponse, List<D>> findByCriteria(Map<String, String> criteria) {
+    public Either<ErrorResponse, List<D>> findAllByCriteria(Map<String, String> criteria) {
         // Build the query to be executed
         Specification<E> specification = this.createSpecification(criteria);
-
         // Find all
         List<E> results = this.repository.findAll(specification);
 
         if (!results.isEmpty()) {
             return Either.right(results.stream().map(mapper::toDto).toList());
         }
-
         // build error message
         ErrorResponse response =
                 ErrorResponse
@@ -268,12 +268,37 @@ public abstract class AbstractBumsoftService<E extends BumsoftEntity, D extends 
                         .responseCode(ApiResponseCode.RESOURCE_NOT_FOUND)
                         .errorMessage("No results found with criteria=" + criteria.toString())
                         .build();
+        // return errors to the client
+        return Either.left(response);
+    }
 
+    /**
+     * Find one element by criteria
+     * @param criteria is the query criteria
+     * @return one element corresponding to the query criteria
+     */
+    @Override
+    public Either<ErrorResponse, D> findOneByCriteria(Map<String, String> criteria) {
+        // Build the query to be executed
+        Specification<E> specification = this.createSpecification(criteria);
+        // Find all
+        Optional<E> result = this.repository.findOne(specification);
+
+        if (result.isPresent()) {
+            return Either.right(mapper.toDto(result.get()));
+        }
+        // build error message
+        ErrorResponse response =
+                ErrorResponse
+                        .builder()
+                        .responseCode(ApiResponseCode.RESOURCE_NOT_FOUND)
+                        .errorMessage("No results found with criteria=" + criteria.toString())
+                        .build();
         // return errors to the client
         return Either.left(response);
     }
 
     public Specification<E> createSpecification(Map<String, String> criteria) {
-        return Specification.where(null);
+        return this.queryBuilder.buildQuerySpecifications(criteria);
     }
 }

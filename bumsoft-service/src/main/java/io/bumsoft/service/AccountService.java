@@ -2,6 +2,7 @@ package io.bumsoft.service;
 
 import io.bumsoft.dao.entity.Account;
 import io.bumsoft.dao.repository.AccountRepository;
+import io.bumsoft.dao.specifications.AccountQueryBuilder;
 import io.bumsoft.dto.BumsoftResponse;
 import io.bumsoft.dto.acounts.AccountSnapshot;
 import io.bumsoft.dto.common.AccountDto;
@@ -11,37 +12,25 @@ import io.bumsoft.dto.response.ErrorResponse;
 import io.bumsoft.exception.BumsoftException;
 import io.bumsoft.mapper.AccountMapper;
 import io.bumsoft.mapper.ReferenceEntityTypeMapper;
-import io.bumsoft.specifications.BumsoftSpecification;
 import io.vavr.control.Either;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.Map;
 
-import static io.bumsoft.specifications.BumsoftSpecification.joinLike;
-import static io.bumsoft.specifications.BumsoftSpecification.like;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
 @Slf4j
 @Service
-public class AccountService extends AbstractBumsoftService<Account, AccountDto, AccountMapper, Long, AccountRepository> {
+public class AccountService extends AbstractBumsoftService<Account, AccountDto, Long> {
 
     private final AccountRepository repository;
     private final ReferenceEntityTypeService referenceService;
     private final ReferenceEntityTypeMapper referenceMapper;
     private final AccountNumberGenerator anGenerator;
-    private final AccountMapper mapper;
-
-    private static final String USER_ID="userId";
-    private static final String ACCOUNT_NUMBER="accountNumber";
-    private static final String ACCOUNT_NAME="name";
-    private static final String DESCRIPTION="description";
-    private static final String ACCOUNT_TYPE="accountType";
 
     @Autowired
     public AccountService(
@@ -50,13 +39,13 @@ public class AccountService extends AbstractBumsoftService<Account, AccountDto, 
             ReferenceEntityTypeService referenceService,
             ReferenceEntityTypeMapper referenceMapper,
             AccountNumberGenerator anGenerator,
-            ValidationService<Account> validationService) {
-        super(repository, mapper, validationService);
+            ValidationService<Account> validationService,
+            AccountQueryBuilder queryBuilder) {
+        super(repository, mapper, validationService, queryBuilder);
         this.repository = repository;
         this.referenceService = referenceService;
         this.referenceMapper = referenceMapper;
         this.anGenerator = anGenerator;
-        this.mapper = mapper;
     }
 
     /**
@@ -154,16 +143,5 @@ public class AccountService extends AbstractBumsoftService<Account, AccountDto, 
             return Either.right(AccountSnapshot.builder().accountBalance(accountBalance).accountInfo(account).build());
         }
         return Either.left(response.getLeft());
-    }
-
-    @Override
-    public Specification<Account> createSpecification(Map<String, String> criteria) {
-        return Specification.<Account>
-                 where(like(ACCOUNT_NUMBER, criteria.getOrDefault(ACCOUNT_NUMBER, null)))
-                .and(like(ACCOUNT_NAME, criteria.getOrDefault(ACCOUNT_NAME, null)))
-                .and(like(DESCRIPTION, criteria.getOrDefault(DESCRIPTION, null)))
-                .and(BumsoftSpecification.equals(USER_ID, criteria.getOrDefault(USER_ID, null)))
-                .and(joinLike(ACCOUNT_TYPE, "name", criteria.getOrDefault(ACCOUNT_TYPE, null)));
-
     }
 }

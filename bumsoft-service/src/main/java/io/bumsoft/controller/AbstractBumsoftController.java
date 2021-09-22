@@ -25,13 +25,13 @@ public abstract class AbstractBumsoftController<D extends BumsoftDto, ID, S exte
     }
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity create(@RequestBody D myDto)  {
-        return ApiResponse.ofCreate(service.create(myDto));
+    public ResponseEntity create(@RequestBody D bumsoftDto)  {
+        return ApiResponse.ofCreate(service.create(bumsoftDto));
     }
 
     @PutMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity update(@PathVariable ID id, @RequestBody D myDto) {
-        return ApiResponse.ofUpdate(service.update(id, myDto));
+    public ResponseEntity update(@PathVariable ID id, @RequestBody D bumsoftDto) {
+        return ApiResponse.ofUpdate(service.update(id, bumsoftDto));
     }
 
     @DeleteMapping(path="/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -41,7 +41,7 @@ public abstract class AbstractBumsoftController<D extends BumsoftDto, ID, S exte
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity findByCriteria(@RequestParam Map<String, String> criteria) {
-        return ApiResponse.ofRead(service.findByCriteria(criteria));
+        return ApiResponse.ofRead(service.findAllByCriteria(criteria));
     }
 
 }
