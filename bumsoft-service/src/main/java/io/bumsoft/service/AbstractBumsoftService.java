@@ -4,7 +4,6 @@ import io.bumsoft.dao.entity.BumsoftEntity;
 import io.bumsoft.dao.repository.BumsoftRepository;
 import io.bumsoft.dao.specifications.BumsoftQueryBuilder;
 import io.bumsoft.dto.BumsoftDto;
-import io.bumsoft.dto.response.ApiResponseCode;
 import io.bumsoft.dto.response.ErrorResponse;
 import io.bumsoft.exception.BumsoftException;
 import io.bumsoft.mapper.AbstractObjectsMapper;
@@ -62,20 +61,13 @@ public abstract class AbstractBumsoftService<E extends BumsoftEntity, D extends 
             return Either.right(mapper.toDto(result));
         } catch (BumsoftException e) {
             log.error(e.getMessage());
-            ErrorResponse error =
-                    ErrorResponse
-                            .builder()
-                            .responseCode(ApiResponseCode.CREATION_FAILED)
-                            .errorMessage(e.getMessage())
-                            .build();
-            return Either.left(error);
+            return Either.left(ErrorResponseService.creationFailed(e.getMessage()));
         }
     }
 
     public void applyInitialCheckBeforeCreate(E entity) throws BumsoftException {
         // Validate object fields
         checkIfInputIsValid(entity);
-
         // Checking if the ID is null
         if (nonNull(entity.getId())) {
             log.error("The id "+entity.getId()+" is not allowed here");
@@ -85,8 +77,8 @@ public abstract class AbstractBumsoftService<E extends BumsoftEntity, D extends 
 
     /**
      * Additional process before persisting the entity
-     * @param entity
-     * @throws BumsoftException
+     * @param entity to be processed before create
+     * @throws BumsoftException thrown input did not satisfy requirements
      */
     public void processBeforeCreate(E entity) throws BumsoftException {
         log.info("Process before create ");
@@ -94,8 +86,8 @@ public abstract class AbstractBumsoftService<E extends BumsoftEntity, D extends 
 
     /**
      * Additional process after the object has been persisted
-     * @param entity
-     * @throws BumsoftException
+     * @param entity possibly processed after update
+     * @throws BumsoftException thrown when something went wrong
      */
     public void processAfterCreate(E entity) throws BumsoftException {
         log.info("Process after create ");
@@ -110,20 +102,16 @@ public abstract class AbstractBumsoftService<E extends BumsoftEntity, D extends 
      */
     @Override
     public Either<ErrorResponse, D> find(ID id) {
-        // Error to be returned in case of error
-        ErrorResponse error = ErrorResponse.builder().responseCode(ApiResponseCode.RESOURCE_NOT_FOUND).errorMessage("Invalid ID ["+id+"]").build();
-
         // Find the resource by its ID
         Optional<E> option = this.repository.findById(id);
-
         // Return the found object or the corresponding error
-        return option.<Either<ErrorResponse, D>>map(e -> Either.right(mapper.toDto(e))).orElseGet(() -> Either.left(error));
+        return option.<Either<ErrorResponse, D>>map(e -> Either.right(mapper.toDto(e))).orElseGet(() -> Either.left(ErrorResponseService.invalidId(id)));
     }
 
     /**
      * Update an element in the table represented by the entity E
      *
-     * @param id
+     * @param id id of the resource to update
      * @param dto to be updated
      * @return the updated entity
      */
@@ -150,19 +138,15 @@ public abstract class AbstractBumsoftService<E extends BumsoftEntity, D extends 
         } catch (BumsoftException e) {
             // Log error message
             log.error("An error occurred while trying to update the object");
-
-            // Build the error message to be exposed to the client
-            ErrorResponse response = ErrorResponse.builder().responseCode(ApiResponseCode.UPDATE_FAILED).errorMessage(e.getMessage()).build();
-
             // Return the error to the client
-            return Either.left(response);
+            return Either.left(ErrorResponseService.updateFailed(e.getMessage()));
         }
     }
 
     /**
      * Apply initial check before update
-     * @param id
-     * @throws BumsoftException
+     * @param id id of the resource to validate
+     * @throws BumsoftException thrown when something went wrong
      */
     public void applyInitialCheckBeforeUpdate(ID id) throws BumsoftException {
         log.info("Initial check before persist");
@@ -180,20 +164,20 @@ public abstract class AbstractBumsoftService<E extends BumsoftEntity, D extends 
 
     /**
      * Additional process before update
-     * @param entity
-     * @throws BumsoftException
+     * @param entity resource to process before update
+     * @throws BumsoftException thrown when something went wrong
      */
     public void processBeforeUpdate(ID id, E entity) throws BumsoftException {
-        log.info("Process before update");
+        log.info("Process before update - ID " + id);
     }
 
     /**
      * Additional process after update
-     * @param entity
-     * @throws BumsoftException
+     * @param entity resource to process after update
+     * @throws BumsoftException thrown when something went wrong
      */
     public void processAfterUpdate(ID id, E entity) throws BumsoftException {
-        log.info("Process after update");
+        log.info("Process after update - ID " + id);
     }
 
     /**
@@ -208,12 +192,8 @@ public abstract class AbstractBumsoftService<E extends BumsoftEntity, D extends 
         if (!this.repository.existsById(id)) {
             // log error
             log.error("Trying to delete an object with an invalid ID");
-
-            // Build error response
-            ErrorResponse response = ErrorResponse.builder().responseCode(ApiResponseCode.INVALID_ID).errorMessage("Invalid object ID ["+id+"]").build();
-
             // Return error response
-            return Either.left(response);
+            return Either.left(ErrorResponseService.invalidId(id));
         }
 
         this.repository.deleteById(id);
@@ -228,8 +208,8 @@ public abstract class AbstractBumsoftService<E extends BumsoftEntity, D extends 
 
     /**
      * Check if the form is valid
-     * @param entity
-     * @throws BumsoftException
+     * @param entity resource to validate
+     * @throws BumsoftException thrown when something went wrong
      */
     public void checkIfInputIsValid(E entity) throws BumsoftException {
         // Validate input
@@ -248,8 +228,8 @@ public abstract class AbstractBumsoftService<E extends BumsoftEntity, D extends 
 
     /**
      * Find a list of objects by criteria
-     * @param criteria
-     * @return List of DTO
+     * @param criteria criteria to filter resources on
+     * @return List of found resources
      */
     @Override
     public Either<ErrorResponse, List<D>> findAllByCriteria(Map<String, String> criteria) {
@@ -257,19 +237,9 @@ public abstract class AbstractBumsoftService<E extends BumsoftEntity, D extends 
         Specification<E> specification = this.createSpecification(criteria);
         // Find all
         List<E> results = this.repository.findAll(specification);
-
-        if (!results.isEmpty()) {
-            return Either.right(results.stream().map(mapper::toDto).toList());
-        }
-        // build error message
-        ErrorResponse response =
-                ErrorResponse
-                        .builder()
-                        .responseCode(ApiResponseCode.RESOURCE_NOT_FOUND)
-                        .errorMessage("No results found with criteria=" + criteria.toString())
-                        .build();
         // return errors to the client
-        return Either.left(response);
+        return !results.isEmpty() ? Either.right(results.stream().map(mapper::toDto).toList()) :
+                                    Either.left(ErrorResponseService.resourceNotFound("No results found with criteria=" + criteria.toString()));
     }
 
     /**
@@ -281,21 +251,11 @@ public abstract class AbstractBumsoftService<E extends BumsoftEntity, D extends 
     public Either<ErrorResponse, D> findOneByCriteria(Map<String, String> criteria) {
         // Build the query to be executed
         Specification<E> specification = this.createSpecification(criteria);
-        // Find all
+        // Find one element using criteria
         Optional<E> result = this.repository.findOne(specification);
-
-        if (result.isPresent()) {
-            return Either.right(mapper.toDto(result.get()));
-        }
-        // build error message
-        ErrorResponse response =
-                ErrorResponse
-                        .builder()
-                        .responseCode(ApiResponseCode.RESOURCE_NOT_FOUND)
-                        .errorMessage("No results found with criteria=" + criteria.toString())
-                        .build();
         // return errors to the client
-        return Either.left(response);
+        return result.<Either<ErrorResponse, D>>map(res -> Either.right(mapper.toDto(res)))
+                     .orElseGet(() -> Either.left(ErrorResponseService.resourceNotFound("No results found with criteria=" + criteria.toString())));
     }
 
     public Specification<E> createSpecification(Map<String, String> criteria) {
