@@ -14,13 +14,11 @@ import io.bumsoft.mapper.AccountMapper;
 import io.bumsoft.mapper.ReferenceEntityTypeMapper;
 import io.vavr.control.Either;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 
-import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
 @Slf4j
@@ -51,8 +49,8 @@ public class AccountService extends AbstractBumsoftService<Account, AccountDto, 
     /**
      * Additional process before persisting the entity
      *
-     * @param entity
-     * @throws BumsoftException
+     * @param entity resource to process before create
+     * @throws BumsoftException exception thrown when an error occurs
      */
     @Override
     public void processBeforeCreate(Account entity) throws BumsoftException {
@@ -74,8 +72,8 @@ public class AccountService extends AbstractBumsoftService<Account, AccountDto, 
     /**
      * Additional process after the object has been persisted
      *
-     * @param entity
-     * @throws BumsoftException
+     * @param entity resource to process after create
+     * @throws BumsoftException exception thrown when an error occurs
      */
     @Override
     public void processAfterCreate(Account entity) throws BumsoftException {
@@ -89,22 +87,15 @@ public class AccountService extends AbstractBumsoftService<Account, AccountDto, 
 
     /**
      * Additional process before update
-     * @param entity
-     * @throws BumsoftException
+     * @param entity resource to process before update
      */
     @Override
-    public void processBeforeUpdate(Long id, Account entity) throws BumsoftException {
+    public void processBeforeUpdate(Long id, Account entity) {
         log.info("Account creation process before update");
         this.repository.findById(id).ifPresent(account -> {
-            if (Strings.isEmpty(entity.getName())) {
-                entity.setName(account.getName());
-            }
-            if (Strings.isEmpty(entity.getDescription())) {
-                entity.setDescription(account.getDescription());
-            }
-            if (isNull(account.getUserId())) {
-                entity.setUserId(account.getUserId());
-            }
+            patch(entity, account, Account::getName, (Account a, Object v) -> a.setName((String) v));
+            patch(entity, account, Account::getDescription, (Account a, Object v) -> a.setDescription((String) v));
+            patch(entity, account, Account::getUserId, (Account a, Object v) -> a.setUserId((Long) v));
             entity.setId(account.getId());
             entity.setAccountNumber(account.getAccountNumber());
             entity.setAccountType(account.getAccountType());
@@ -117,8 +108,8 @@ public class AccountService extends AbstractBumsoftService<Account, AccountDto, 
     /**
      * Additional process after update
      *
-     * @param entity
-     * @throws BumsoftException
+     * @param entity resource to process before update
+     * @throws BumsoftException exception thrown when an error occurs
      */
     @Override
     public void processAfterUpdate(Long id, Account entity) throws BumsoftException {
@@ -132,16 +123,13 @@ public class AccountService extends AbstractBumsoftService<Account, AccountDto, 
 
     /**
      * Find account balance
-     * @param accountId
-     * @return
+     * @param accountId id of the account
+     * @return the account balance
      */
     public Either<ErrorResponse, BumsoftResponse> findAccountBalance(final Long accountId) {
-        Either<ErrorResponse, AccountDto>  response = find(accountId);
-        if (response.isRight()) {
-            AccountDto account = response.get();
+        return this.find(accountId).bimap(error -> error, account -> {
             Double accountBalance = account.getTransactions().stream().mapToDouble(TransactionDto::getValue).sum();
-            return Either.right(AccountSnapshot.builder().accountBalance(accountBalance).accountInfo(account).build());
-        }
-        return Either.left(response.getLeft());
+            return AccountSnapshot.builder().accountBalance(accountBalance).accountInfo(account).build();
+        });
     }
 }

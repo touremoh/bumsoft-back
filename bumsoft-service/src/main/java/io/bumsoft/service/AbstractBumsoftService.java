@@ -14,6 +14,8 @@ import org.springframework.data.jpa.domain.Specification;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.BiConsumer;
+import java.util.function.Function;
 
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
@@ -260,5 +262,11 @@ public abstract class AbstractBumsoftService<E extends BumsoftEntity, D extends 
 
     public Specification<E> createSpecification(Map<String, String> criteria) {
         return this.queryBuilder.buildQuerySpecifications(criteria);
+    }
+
+    public void patch(E entityToUpdate, E source, Function<E, Object> getter, BiConsumer<E, Object> setter) {
+        if (isNull(getter.apply(entityToUpdate))) {
+            setter.accept(entityToUpdate, getter.apply(source));
+        }
     }
 }
